@@ -15,7 +15,9 @@
     "build:lambda": "netlify-lambda build src/lambda"
   },
   "dependencies": {
+    "intersection-observer": "^0.5.1",
     "nuxt": "^2.0.0",
+    "scrollama": "^1.4.4",
     "youtube-captions-scraper": "^1.0.3",
     "youtube.get-video-info": "^1.0.1"
   },
