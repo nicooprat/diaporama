@@ -16,8 +16,9 @@ exports.handler = function(event, context, callback) {
       callback(res.reason, {statusCode: 500})
       return
     } else {
-      const captions = JSON.parse(res.player_response).captions.playerCaptionsTracklistRenderer.captionTracks
-      const streams = res.url_encoded_fmt_stream_map
+      const playerResponse = JSON.parse(res.player_response)
+      const captions = playerResponse.captions.playerCaptionsTracklistRenderer.captionTracks
+      const streams = playerResponse.streamingData.formats
 
       callback(null, {
         statusCode: 200,

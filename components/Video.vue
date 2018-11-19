@@ -1,12 +1,18 @@
 <template>
   <main>
-    <div class="video">
-      <video :src="stream" muted playsinline autoplay v-on:loadeddata="init" v-on:progress="progress"></video>
-      <div class="loaded" :style="{transform: 'scaleX('+ $data.loaded / $data.duration +')'}"></div>
-      <div class="progress" :style="{transform: 'scaleX('+ $data.currentTime / $data.duration +')'}"></div>
-      <div v-if="$data.loaded" class="currentTime">{{formatTime($data.currentTime)}}</div>
-      <div v-if="$data.loaded" class="duration">{{formatTime($data.duration)}}</div>
-    </div>
+    <section class="video" :style="{'--ratio': stream.height / stream.width}">
+      <video
+        :src="stream.url"
+        :width="stream.width"
+        :height="stream.height" muted playsinline autoplay v-on:loadeddata="init"
+        :data-loaded="loaded > 0"
+        v-on:progress="progress">
+      </video>
+      <div class="loaded" :style="{transform: 'scaleX('+ loaded / duration +')'}"></div>
+      <div class="progress" :style="{transform: 'scaleX('+ currentTime / duration +')'}"></div>
+      <div v-if="loaded" class="currentTime">{{formatTime(currentTime)}}</div>
+      <div v-if="loaded" class="duration">{{formatTime(duration)}}</div>
+    </section>
 
     <ul v-if="captions">
       <Caption
@@ -39,9 +45,18 @@ export default {
       scrollama: null,
       loaded: 0,
       duration: 0,
-      durationFormatted: 0,
       currentTime: 0,
-      currentTimeFormatted: 0
+      itag: process.browser ? (window.innerWidth > 520 ? '22' : '18') : '18'
+    }
+  },
+  created() {
+    if(process.browser) {
+      window.addEventListener('resize', this.switchVideoFormat)
+    }
+  },
+  beforeDestroy() {
+    if(process.browser) {
+      window.removeEventListener('resize', this.switchVideoFormat)
     }
   },
   watch: {
@@ -67,6 +82,9 @@ export default {
     },
   },
   methods: {
+    switchVideoFormat(e) {
+      this.$data.itag = window.innerWidth > 520 ? '22' : '18'
+    },
     formatTime(s) {
       const minutes = Math.floor(s/60)
       const seconds = Math.floor(s%60)
@@ -90,8 +108,8 @@ export default {
   computed: {
     ...mapState(['currentIndex']),
     stream() {
-      const stream = this.$props.video.streams.filter(i => i.itag == '18')
-      return stream && stream[0].url
+      const stream = this.$props.video.streams.filter(i => i.itag == this.$data.itag)
+      return stream && stream[0]
     }
   }
 }
@@ -99,6 +117,9 @@ export default {
 
 <style>
   main {
+    max-width: 45rem;
+    margin-left: auto;
+    margin-right: auto;
     text-align: center;
     color: #2c3e50;
     font-size: calc(.5em + 2vmax);
@@ -113,34 +134,17 @@ export default {
 
   .video {
     position: sticky;
+    padding-bottom: calc(var(--ratio) * 100%);
     top: 0; left: 0; right: 0;
     z-index: 1;
-    max-width: 45rem;
-    margin-left: auto;
-    margin-right: auto;
-    border: 5vh solid white;
-    background-color: white;
-    animation: fade 250ms both;
+    background-color: #f8fafd;
   }
 
-  @keyframes fade {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
+  @media (min-width: 45rem) {
 
-  .video:before {
-    content: '';
-    position: absolute;
-    width: 100vw;
-    left: 50%;
-    margin-left: -50vw;
-    top: -5vh; bottom: -5vh;
-    z-index: -1;
-    background-color: white;
+    .video {
+      border-top: 5vh solid #f8fafd;
+    }
   }
 
   .video:after {
@@ -151,16 +155,26 @@ export default {
     top: 100%;
     height: 10vh;
     pointer-events: none;
-    border-top: 10vh solid white;
+    border-top: 10vh solid #f8fafd;
     position: absolute;
-    background-image: linear-gradient(to bottom, rgba(255,255,255,1), rgba(255,255,255,0));
+    background-image: linear-gradient(to bottom, #f8fafd, transparent);
   }
 
   video {
     display: block;
-    max-width: 100%;
-    height: auto;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    object-fit: cover;
     background-color: rgba(0,0,0,.05);
+    opacity: 0;
+    transition: opacity 250ms;
+  }
+
+  video[data-loaded] {
+    opacity: 1;
   }
 
   .progress,
@@ -191,6 +205,14 @@ export default {
     opacity: .5;
   }
 
+  @media (max-width: 45rem) {
+
+    .currentTime,
+    .duration {
+      padding: .5em;
+    }
+  }
+
   .currentTime {
     left: 0;
   }
@@ -200,9 +222,15 @@ export default {
   }
 
   ul {
-    max-width: 45rem;
     list-style-type: none;
     padding: 0 5vh;
-    margin: 15vh auto 25vh;
+    margin: 25vh auto 25vh;
+  }
+
+  @media (min-width: 520px) {
+
+    ul {
+      margin-top: 15vh;
+    }
   }
 </style>
