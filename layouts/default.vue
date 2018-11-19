@@ -5,10 +5,6 @@
 <style>
   @import "normalize.css/normalize.css";
 
-  * {
-    scroll-behavior: smooth;
-  }
-
   body {
     font-family: "Avenir", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     -webkit-font-smoothing: antialiased;

@@ -1,9 +1,6 @@
 <template>
-  <li
-    class="step"
-    v-text="caption.text"
-    :data-start="caption.start"
-    :style="{animationDelay: i*50+'ms'}">
+  <li class="caption" :data-start="caption.start">
+    <span :style="{animationDelay: i*50+'ms'}">{{caption.text}}</span>
   </li>
 </template>
 
@@ -13,7 +10,7 @@ export default {
   mounted() {
     if(process.browser) {
       if(this.$props.i == this.$store.state.currentIndex) {
-        window.scrollTo(0,this.$el.offsetTop - window.innerHeight * .7)
+        this.$emit('go', this.$el.offsetTop - (window.innerHeight * .75) + 1)
       }
     }
   }
@@ -24,9 +21,7 @@ export default {
 
   li {
     margin: 1px 0 0 0;
-    padding: 2.5vh .5em;
     position: relative;
-    animation: appear 250ms both;
   }
 
   li[data-active] {
@@ -37,8 +32,14 @@ export default {
     content: '';
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
-    background-color: white;
+    background-color: #f8fafd;
     opacity: .75;
+  }
+
+  span {
+    display: block;
+    padding: 2.5vh .5em;
+    animation: appear 250ms both;
   }
 
   @keyframes appear {

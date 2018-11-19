@@ -16,6 +16,7 @@
 
     <ul v-if="captions">
       <Caption
+        @go="initScrollorama"
         v-for="(caption,i) in captions"
         :caption="caption"
         :i="i"
@@ -34,6 +35,22 @@ if(process.browser) {
   require('intersection-observer')
   var scrollama = require('scrollama')
 }
+
+function debounce(func, wait, immediate) {
+  var timeout;
+  return function() {
+    var context = this, args = arguments;
+    var later = function() {
+      timeout = null;
+      if (!immediate) func.apply(context, args);
+    };
+    var callNow = immediate && !timeout;
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+    if (callNow) func.apply(context, args);
+  };
+};
+
 
 export default {
   components: {
@@ -60,28 +77,22 @@ export default {
     }
   },
   watch: {
-    captions: {
-      handler(captions) {
-        if(captions && scrollama) {
-          this.$nextTick(() => {
-            scrollama()
-            .setup({
-              offset: .7,
-              step: '.step'
-            })
-            .onStepEnter(({element, index, direction}) => {
-              this.$store.dispatch('setIndex', index)
-            })
-          })
-        }
-      },
-      immediate: true
-    },
     currentIndex(index) {
       this.seek(this.$props.captions[index].start)
     },
   },
   methods: {
+    initScrollorama(top) {
+      window.scrollTo(0,top)
+      scrollama()
+      .setup({
+        offset: .75,
+        step: '.caption',
+      })
+      .onStepEnter(({element, index, progress}) => {
+        this.$store.dispatch('setIndex', index)
+      })
+    },
     switchVideoFormat(e) {
       this.$data.itag = window.innerWidth > 520 ? '22' : '18'
     },
