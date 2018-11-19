@@ -1,6 +1,6 @@
 <template>
   <main>
-    <div class="video" v-show="$data.duration > 0">
+    <div class="video">
       <video :src="stream" muted playsinline autoplay v-on:loadeddata="init" v-on:progress="progress"></video>
       <div class="loaded" :style="{transform: 'scaleX('+ $data.loaded / $data.duration +')'}"></div>
       <div class="progress" :style="{transform: 'scaleX('+ $data.currentTime / $data.duration +')'}"></div>
@@ -8,32 +8,35 @@
       <div v-if="$data.loaded" class="duration">{{formatTime($data.duration)}}</div>
     </div>
 
-    <ul v-show="$data.duration > 0 && captions">
-      <li
-        class="step"
-        v-for="(subtitle,i) in captions"
-        v-text="subtitle.text"
-        :key="i"
-        :data-start="subtitle.start"
-        :style="{animationDelay: i*50+'ms'}"
-        :data-active="i == $data.index"
-        :data-loaded="subtitle.start <= $data.loaded">
-      </li>
+    <ul v-if="captions">
+      <Caption
+        v-for="(caption,i) in captions"
+        :caption="caption"
+        :i="i"
+        :data-active="i == $store.state.currentIndex"
+        :data-loaded="caption.start < loaded"
+        :key="i"/>
     </ul>
   </main>
 </template>
 
 <script>
+import { mapState } from 'vuex'
+import Caption from './Caption'
+
 if(process.browser) {
   require('intersection-observer')
   var scrollama = require('scrollama')
 }
 
 export default {
+  components: {
+    Caption
+  },
   props: ['videoID', 'video', 'captions'],
   data() {
     return {
-      index: 0,
+      scrollama: null,
       loaded: 0,
       duration: 0,
       durationFormatted: 0,
@@ -52,27 +55,25 @@ export default {
               step: '.step'
             })
             .onStepEnter(({element, index, direction}) => {
-              this.$data.index = index
+              this.$store.dispatch('setIndex', index)
             })
           })
         }
       },
       immediate: true
     },
-    index(i) {
-      this.seek(this.$props.captions[i].start)
+    currentIndex(index) {
+      this.seek(this.$props.captions[index].start)
     },
   },
   methods: {
-    stepEnterHandler({element, index, direction}) {
-      this.$data.index = index
-    },
     formatTime(s) {
       const minutes = Math.floor(s/60)
       const seconds = Math.floor(s%60)
       return [minutes < 10 ? '0'+minutes : minutes, seconds < 10 ? '0'+seconds : seconds].join(':')
     },
     seek(time) {
+      if(!this.$el) return
       const video = this.$el.querySelector('video')
       video.currentTime = parseFloat(time)
       this.$data.currentTime = parseInt(time)
@@ -87,6 +88,7 @@ export default {
     },
   },
   computed: {
+    ...mapState(['currentIndex']),
     stream() {
       const stream = this.$props.video.streams.filter(i => i.itag == '18')
       return stream && stream[0].url
@@ -202,34 +204,5 @@ export default {
     list-style-type: none;
     padding: 0 5vh;
     margin: 15vh auto 25vh;
-  }
-
-  li {
-    margin: 1px 0 0 0;
-    padding: 2.5vh .5em;
-    position: relative;
-    animation: appear 250ms both;
-  }
-
-  li[data-active] {
-    background-color: rgba(0,0,0,.05);
-  }
-
-  li:not([data-loaded]):after {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background-color: white;
-    opacity: .75;
-  }
-
-  @keyframes appear {
-    from {
-      opacity: 0;
-      transform: translateY(5vh);
-    }
-    to {
-      opacity: 1;
-    }
   }
 </style>
