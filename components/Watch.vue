@@ -30,27 +30,12 @@
 <script>
 import { mapState } from 'vuex'
 import Caption from './Caption'
+import debounce from 'lodash/debounce'
 
 if(process.browser) {
   require('intersection-observer')
   var scrollama = require('scrollama')
 }
-
-function debounce(func, wait, immediate) {
-  var timeout;
-  return function() {
-    var context = this, args = arguments;
-    var later = function() {
-      timeout = null;
-      if (!immediate) func.apply(context, args);
-    };
-    var callNow = immediate && !timeout;
-    clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
-    if (callNow) func.apply(context, args);
-  };
-};
-
 
 export default {
   components: {
@@ -89,9 +74,9 @@ export default {
         offset: .75,
         step: '.caption',
       })
-      .onStepEnter(({element, index, progress}) => {
+      .onStepEnter(debounce(({element, index, progress}) => {
         this.$store.dispatch('setIndex', index)
-      })
+      }, 50, {leading: false, trailing: true}))
     },
     switchVideoFormat(e) {
       this.$data.itag = window.innerWidth > 520 ? '22' : '18'
