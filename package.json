@@ -5,7 +5,7 @@
   "author": "Nico Prat <nicooprat@gmail.com>",
   "private": true,
   "scripts": {
-    "dev": "nuxt",
+    "dev": "HOST=0.0.0.0 nuxt",
     "build": "nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate",
@@ -28,6 +28,8 @@
     "eslint-friendly-formatter": "^4.0.1",
     "eslint-loader": "^2.1.1",
     "eslint-plugin-vue": "^4.0.0",
-    "netlify-lambda": "^1.0.3"
+    "netlify-lambda": "^1.0.3",
+    "node-sass": "^4.10.0",
+    "sass-loader": "^7.1.0"
   }
 }

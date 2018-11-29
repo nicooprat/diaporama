@@ -7,17 +7,6 @@
 <script>
 export default {
   props: ['i', 'caption'],
-  mounted() {
-    if(process.browser) {
-      if(this.$props.i == this.$store.state.currentIndex) {
-        this.$emit('scrollTo', this.$el)
-      }
-    }
-    this.$emit('captionReady', {
-      el: this.$el,
-      index: this.$props.i
-    })
-  }
 }
 </script>
 

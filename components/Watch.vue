@@ -12,6 +12,7 @@
       <div class="progress" :style="{transform: 'scaleX('+ currentTime / duration +')'}"></div>
       <div v-if="loaded" class="currentTime">{{formatTime(currentTime)}}</div>
       <div v-if="loaded" class="duration">{{formatTime(duration)}}</div>
+      <input v-if="loaded" type="range" class="handle" step="0.1" @input="drag" :value="percentSeek">
     </section>
 
     <ul v-if="captions">
@@ -87,6 +88,16 @@ export default {
     },
   },
   methods: {
+    drag(e) {
+      const percent = e.target.value
+      const newTime = this.duration * percent/100
+      const newIndex = this.captions.reduce((previous, caption, index) => {
+        return caption.start < newTime ? index : previous
+      }, 0)
+      this.seek(newTime)
+      this.$store.dispatch('setIndex', newIndex)
+      this.controller.scrollTo(this.scenes[newIndex])
+    },
     switchVideoFormat(e) {
       this.$data.itag = window.innerWidth > 520 ? '22' : '18'
     },
@@ -112,6 +123,9 @@ export default {
   },
   computed: {
     ...mapState(['currentIndex']),
+    percentSeek() {
+      return parseFloat(this.currentTime / this.duration * 100)
+    },
     stream() {
       const stream = this.$props.video.streams.filter(i => i.itag == this.$data.itag)
       return stream && stream[0]
@@ -120,7 +134,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
   main {
     max-width: 45rem;
     margin-left: auto;
@@ -162,7 +176,7 @@ export default {
     pointer-events: none;
     border-top: 10vh solid #f8fafd;
     position: absolute;
-    background-image: linear-gradient(to bottom, #f8fafd, transparent);
+    background-image: linear-gradient(to bottom, #f8fafd, rgba(#f8fafd,0));
   }
 
   video {
@@ -176,6 +190,12 @@ export default {
     background-color: rgba(0,0,0,.05);
     opacity: 0;
     transition: opacity 250ms;
+
+    // Hide play button on iOS
+    &::-webkit-media-controls-start-playback-button {
+      display: none!important;
+      -webkit-appearance: none;
+    }
   }
 
   video[data-loaded] {
@@ -187,7 +207,8 @@ export default {
     height: 1vh;
     position: absolute;
     z-index: 2;
-    left: 0; bottom: 0; right: 0;
+    width: 99.9%; // Fix iOS bug
+    left: 0; bottom: 0;
     transform: scaleX(0);
     transform-origin: left;
   }
@@ -226,10 +247,37 @@ export default {
     right: 0;
   }
 
+  .handle {
+    appearance: none;
+    width: 100%;
+    height: 5vh;
+    position: absolute;
+    bottom: -2vh; left: 0;
+    z-index: 3;
+    background: none;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .handle::-webkit-slider-runnable-track {
+    appearance: none;
+    background: transparent;
+  }
+
+  .handle::-webkit-slider-thumb {
+    appearance: none;
+    width: 2vh;
+    height: 2vh;
+    border-radius: 100%;
+    background: #ff002c;
+    border: none;
+    cursor: pointer;
+  }
+
   ul {
     list-style-type: none;
     padding: 0 5vh;
-    margin: 31vh auto;
+    margin: 25vh auto;
   }
 
   @media (min-width: 520px) {
