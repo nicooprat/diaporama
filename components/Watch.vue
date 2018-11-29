@@ -20,6 +20,7 @@
         v-for="(caption,i) in captions"
         :caption="caption"
         :i="i"
+        :data-ready="scrolledDown"
         :data-active="i == $store.state.currentIndex"
         :data-loaded="caption.start < loaded"
         :key="i"/>
@@ -48,6 +49,7 @@ export default {
       loaded: 0,
       duration: 0,
       currentTime: 0,
+      scrolledDown: false,
       itag: process.browser ? (window.innerWidth > 520 ? '22' : '18') : '18'
     }
   },
@@ -67,11 +69,15 @@ export default {
     },
   },
   methods: {
-    initScrollorama(top) {
+    initScrollorama(currentCaption) {
+      const firstCaption = this.$children.filter(c => c._name === '<Caption>')[0].$el
+      const offset = (firstCaption.offsetTop + firstCaption.clientHeight) / window.innerHeight - 0.01
+      const top = currentCaption.offsetTop - (window.innerHeight * offset) + 1
       window.scrollTo(0,top)
+      this.scrolledDown = true
       scrollama()
       .setup({
-        offset: .75,
+        offset,
         step: '.caption',
       })
       .onStepEnter(debounce(({element, index, progress}) => {

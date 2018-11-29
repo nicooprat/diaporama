@@ -1,6 +1,6 @@
 <template>
   <li class="caption" :data-start="caption.start">
-    <span :style="{animationDelay: i*50+'ms'}">{{caption.text}}</span>
+    <span :style="{animationDelay: Math.min(500,Math.max(0,(i-$store.state.currentIndex)))*50+'ms'}">{{caption.text}}</span>
   </li>
 </template>
 
@@ -10,7 +10,7 @@ export default {
   mounted() {
     if(process.browser) {
       if(this.$props.i == this.$store.state.currentIndex) {
-        this.$emit('go', this.$el.offsetTop - (window.innerHeight * .75) + 1)
+        this.$emit('go', this.$el)
       }
     }
   }
@@ -22,6 +22,12 @@ export default {
   li {
     margin: 1px 0 0 0;
     position: relative;
+    padding: 2.5vh .5em;
+    animation: appear 250ms both paused;
+  }
+
+  li[data-ready] {
+    animation-play-state: running;
   }
 
   li[data-active] {
@@ -34,12 +40,6 @@ export default {
     top: 0; left: 0; right: 0; bottom: 0;
     background-color: #f8fafd;
     opacity: .75;
-  }
-
-  span {
-    display: block;
-    padding: 2.5vh .5em;
-    animation: appear 250ms both;
   }
 
   @keyframes appear {
