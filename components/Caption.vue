@@ -1,6 +1,6 @@
 <template>
-  <li class="caption" :data-start="caption.start">
-    <span :style="{animationDelay: Math.min(500,Math.max(0,(i-$store.state.currentIndex)))*50+'ms'}">{{caption.text}}</span>
+  <li class="caption" :data-start="caption.start" :style="{animationDelay: Math.min(500,Math.max(0,(i-$store.state.currentIndex)))*50+'ms'}">
+    {{caption.text}}
   </li>
 </template>
 
@@ -10,9 +10,13 @@ export default {
   mounted() {
     if(process.browser) {
       if(this.$props.i == this.$store.state.currentIndex) {
-        this.$emit('go', this.$el)
+        this.$emit('scrollTo', this.$el)
       }
     }
+    this.$emit('captionReady', {
+      el: this.$el,
+      index: this.$props.i
+    })
   }
 }
 </script>

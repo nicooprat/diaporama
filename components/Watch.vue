@@ -16,7 +16,6 @@
 
     <ul v-if="captions">
       <Caption
-        @go="initScrollorama"
         v-for="(caption,i) in captions"
         :caption="caption"
         :i="i"
@@ -31,11 +30,9 @@
 <script>
 import { mapState } from 'vuex'
 import Caption from './Caption'
-import debounce from 'lodash/debounce'
 
 if(process.browser) {
-  require('intersection-observer')
-  var scrollama = require('scrollama')
+  var ScrollMagic = require('scrollmagic/scrollmagic/uncompressed/ScrollMagic')
 }
 
 export default {
@@ -50,17 +47,38 @@ export default {
       duration: 0,
       currentTime: 0,
       scrolledDown: false,
+      controller: null,
+      scenes: [],
       itag: process.browser ? (window.innerWidth > 520 ? '22' : '18') : '18'
     }
   },
-  created() {
+  mounted() {
     if(process.browser) {
       window.addEventListener('resize', this.switchVideoFormat)
     }
+
+    this.controller = new ScrollMagic.Controller()
+
+    const children = this.$children.filter(c => c._name === '<Caption>')
+    const offset = (children[0].$el.offsetTop + children[0].$el.clientHeight) / window.innerHeight
+
+    this.scenes = children.map((child, index) => {
+      return new ScrollMagic.Scene({
+        triggerElement: child.$el,
+        duration: child.$el.clientHeight,
+        triggerHook: offset,
+      })
+      .on('enter', e => e.state === 'DURING' && this.$store.dispatch('setIndex', index))
+      .addTo(this.controller)
+    })
+
+    this.controller.scrollTo(this.scenes[this.$store.state.currentIndex])
+    this.scrolledDown = true
   },
   beforeDestroy() {
     if(process.browser) {
       window.removeEventListener('resize', this.switchVideoFormat)
+      this.controller.destroy(true)
     }
   },
   watch: {
@@ -69,21 +87,6 @@ export default {
     },
   },
   methods: {
-    initScrollorama(currentCaption) {
-      const firstCaption = this.$children.filter(c => c._name === '<Caption>')[0].$el
-      const offset = (firstCaption.offsetTop + firstCaption.clientHeight) / window.innerHeight - 0.01
-      const top = currentCaption.offsetTop - (window.innerHeight * offset) + 1
-      window.scrollTo(0,top)
-      this.scrolledDown = true
-      scrollama()
-      .setup({
-        offset,
-        step: '.caption',
-      })
-      .onStepEnter(debounce(({element, index, progress}) => {
-        this.$store.dispatch('setIndex', index)
-      }, 50, {leading: false, trailing: true}))
-    },
     switchVideoFormat(e) {
       this.$data.itag = window.innerWidth > 520 ? '22' : '18'
     },
@@ -226,13 +229,13 @@ export default {
   ul {
     list-style-type: none;
     padding: 0 5vh;
-    margin: 25vh auto 25vh;
+    margin: 31vh auto;
   }
 
   @media (min-width: 520px) {
 
     ul {
-      margin-top: 15vh;
+      margin-top: 20vh;
     }
   }
 </style>
