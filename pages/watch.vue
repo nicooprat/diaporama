@@ -1,14 +1,14 @@
 <template>
-  <Video :captions="captions" :videoID="videoID" :video="video"/>
+  <Watch :captions="captions" :videoID="videoID" :video="video"/>
 </template>
 
 <script>
 import axios from 'axios';
-import Video from '~/components/Video';
+import Watch from '~/components/Watch';
 
 export default {
   components: {
-    Video,
+    Watch,
   },
   data() {
     return {
