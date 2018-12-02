@@ -21,7 +21,7 @@
         :caption="caption"
         :i="i"
         :data-ready="scrolledDown"
-        :data-active="i == $store.state.currentIndex"
+        :data-active="i == currentIndex"
         :data-loaded="caption.start < loaded"
         :key="i"/>
     </ul>
@@ -40,7 +40,6 @@ export default {
   components: {
     Caption
   },
-  props: ['videoID', 'video', 'captions'],
   data() {
     return {
       scrollama: null,
@@ -73,18 +72,20 @@ export default {
       .addTo(this.controller)
     })
 
-    this.controller.scrollTo(this.scenes[this.$store.state.currentIndex])
+    this.controller.scrollTo(this.scenes[this.currentIndex])
     this.scrolledDown = true
   },
   beforeDestroy() {
     if(process.browser) {
       window.removeEventListener('resize', this.switchVideoFormat)
-      this.controller.destroy(true)
+      this.controller && this.controller.destroy(true)
     }
   },
   watch: {
     currentIndex(index) {
-      this.seek(this.$props.captions[index].start)
+      const currentCaption = this.captions[index]
+      if(currentCaption) this.seek(currentCaption.start)
+      else this.seek(0)
     },
   },
   methods: {
@@ -122,19 +123,19 @@ export default {
     },
   },
   computed: {
-    ...mapState(['currentIndex']),
+    ...mapState(['video', 'captions', 'currentIndex']),
     percentSeek() {
       return parseFloat(this.currentTime / this.duration * 100)
     },
     stream() {
-      const stream = this.$props.video.streams.filter(i => i.itag == this.$data.itag)
+      const stream = this.video.streams.filter(i => i.itag == this.$data.itag)
       return stream && stream[0]
     }
   }
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   main {
     max-width: 45rem;
     margin-left: auto;

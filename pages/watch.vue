@@ -1,37 +1,56 @@
 <template>
-  <Watch :captions="captions" :videoID="videoID" :video="video"/>
+  <article v-if="video">
+    <Watch/>
+
+    <select v-on:change="switchLang">
+      <option v-for="caption in video.captions" v-bind:key="caption.vssId" :value="caption.languageCode" :selected="lang === caption.languageCode" v-if="caption.kind !== 'asr'">
+        {{caption.name.simpleText.replace(/\+/g, ' ')}}
+      </option>
+    </select>
+  </article>
+
+  <p v-else>Loading...</p>
 </template>
 
 <script>
-import axios from 'axios';
+import { mapState } from 'vuex'
 import Watch from '~/components/Watch';
 
 export default {
   components: {
     Watch,
   },
-  data() {
-    return {
-      videoID: this.$route.query.v,
-      video: '',
-      captions: ''
+  computed: mapState(['video', 'captions', 'lang']),
+  async fetch({route, store, redirect}) {
+    if(!route.query.v) {
+      redirect('/')
+    } else {
+      const video = await store.dispatch('getVideo', route.query.v)
+      if(video.captions) {
+        const captions = await store.dispatch('getCaptions', {
+          videoID: route.query.v,
+          lang: store.state.lang || video.captions[0].languageCode
+        })
+      }
     }
   },
-  async asyncData(context) {
-    const prefix = process.env.NODE_ENV === 'development' ? 'http://10.0.0.44:9000' : '/.netlify/functions'
-    const videoID = context.route.query.v
-    const lang = context.route.query.l || ''
-    const video = await axios.get(`${prefix}/video?v=${videoID}&l=${lang}`)
-    const captions = await axios.get(`${prefix}/captions?v=${videoID}&l=${lang}`)
-    return {
-      video: video.data,
-      captions: captions.data
+  methods: {
+    async switchLang(e) {
+      await this.$store.dispatch('switchCaptions', {
+        videoID: this.$store.state.videoID,
+        lang: e.target.value
+      })
     }
   }
 }
 </script>
 
-<style>
-
+<style lang="scss" scoped>
+  select {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
 </style>
 
