@@ -256,28 +256,32 @@ export default {
   .handle {
     appearance: none;
     width: 100%;
-    height: 5vh;
+    height: 100%;
     position: absolute;
-    bottom: -2vh; left: 0;
+    bottom: 0; left: 0;
     z-index: 3;
     background: none;
     outline: none;
+    cursor: pointer;
     -webkit-tap-highlight-color: transparent;
   }
 
   .handle::-webkit-slider-runnable-track {
-    appearance: none;
+    display: flex;
+    height: 100%;
     background: transparent;
+    appearance: none;
   }
 
   .handle::-webkit-slider-thumb {
     appearance: none;
     width: 2vh;
     height: 2vh;
+    margin-top: auto;
+    margin-bottom: -.5vh;
     border-radius: 100%;
     background: #ff002c;
     border: none;
-    cursor: pointer;
   }
 
   ul {
