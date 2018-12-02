@@ -17,13 +17,16 @@
 
     <ul v-if="captions">
       <Caption
-        v-for="(caption,i) in captions"
+        v-for="(caption,index) in captions"
+        @addScene="addScene"
+        @removeScene="removeScene"
+        @scrollTo="scrollTo"
         :caption="caption"
-        :i="i"
+        :index="index"
         :data-ready="scrolledDown"
-        :data-active="i == currentIndex"
+        :data-active="index == currentIndex"
         :data-loaded="caption.start < loaded"
-        :key="i"/>
+        :key="index"/>
     </ul>
   </main>
 </template>
@@ -52,34 +55,24 @@ export default {
       itag: process.browser ? (window.innerWidth > 520 ? '22' : '18') : '18'
     }
   },
-  mounted() {
-    if(process.browser) {
-      window.addEventListener('resize', this.switchVideoFormat)
-    }
-
+  created() {
+    if(!process.browser) return
     this.controller = new ScrollMagic.Controller()
-
-    const children = this.$children.filter(c => c._name === '<Caption>')
-    const offset = (children[0].$el.offsetTop + children[0].$el.clientHeight) / window.innerHeight
-
-    this.scenes = children.map((child, index) => {
-      return new ScrollMagic.Scene({
-        triggerElement: child.$el,
-        duration: child.$el.clientHeight,
-        triggerHook: offset,
-      })
-      .on('enter', e => e.state === 'DURING' && this.$store.dispatch('setIndex', index))
-      .addTo(this.controller)
-    })
-
-    this.controller.scrollTo(this.scenes[this.currentIndex])
-    this.scrolledDown = true
+  },
+  mounted() {
+    if(!process.browser) return
+    window.addEventListener('resize', this.switchVideoFormat)
+    // When store dispatch
+    this.$bus.$on('resetScroll', e => this.controller.scrollTo(0))
+    // Set caption scroll trigger offset according to first child position
+    const el = this.scenes[0].triggerElement()
+    const offset = (el.offsetTop + el.clientHeight/2) / window.innerHeight
+    this.scenes.forEach(scene => scene.triggerHook(offset))
   },
   beforeDestroy() {
-    if(process.browser) {
-      window.removeEventListener('resize', this.switchVideoFormat)
-      this.controller && this.controller.destroy(true)
-    }
+    if(!process.browser) return
+    window.removeEventListener('resize', this.switchVideoFormat)
+    this.controller && this.controller.destroy(true)
   },
   watch: {
     currentIndex(index) {
@@ -98,6 +91,18 @@ export default {
       this.seek(newTime)
       this.$store.dispatch('setIndex', newIndex)
       this.controller.scrollTo(this.scenes[newIndex])
+    },
+    addScene({scene, index}) {
+      this.controller.addScene(scene)
+      this.scenes[index] = scene
+    },
+    removeScene({scene, index}) {
+      this.controller.removeScene(scene)
+      delete this.scenes[index]
+    },
+    scrollTo({scene, index}) {
+      this.controller.scrollTo(scene)
+      this.scrolledDown = true
     },
     switchVideoFormat(e) {
       this.$data.itag = window.innerWidth > 520 ? '22' : '18'

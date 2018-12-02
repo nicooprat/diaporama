@@ -37,6 +37,7 @@ module.exports = {
   },
   plugins: [
     { src: '~plugins/router-sync.js' },
+    { src: '~plugins/event-bus.js' },
   ]
 }
 

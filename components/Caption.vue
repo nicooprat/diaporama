@@ -1,12 +1,46 @@
 <template>
-  <li class="caption" :data-start="caption.start" :style="{animationDelay: Math.min(500,Math.max(0,(i-$store.state.currentIndex)))*50+'ms'}">
+  <li class="caption" :data-start="caption.start" :style="{animationDelay: Math.min(500,Math.max(0,(index-$store.state.currentIndex)))*50+'ms'}">
     {{caption.text}}
   </li>
 </template>
 
 <script>
+if(process.browser) {
+  var ScrollMagic = require('scrollmagic/scrollmagic/uncompressed/ScrollMagic')
+}
+
 export default {
-  props: ['i', 'caption'],
+  props: ['index', 'caption'],
+  data() {
+    return {
+      scene: null
+    }
+  },
+  mounted() {
+    if(!process.browser) return
+    this.scene = new ScrollMagic.Scene({
+      triggerElement: this.$el,
+      duration: this.$el.clientHeight,
+    })
+    .on('enter', e => e.state === 'DURING' && this.$store.dispatch('setIndex', this.$props.index))
+    this.$emit('addScene', {
+      scene: this.scene,
+      index: this.$props.index
+    })
+
+    if(this.$store.state.currentIndex === this.$props.index) {
+      this.$emit('scrollTo', {
+        scene: this.scene,
+        index: this.$props.index
+      })
+    }
+  },
+  destroyed() {
+    this.$emit('removeScene', {
+      scene: this.scene,
+      index: this.$props.index
+    })
+  }
 }
 </script>
 

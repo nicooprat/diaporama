@@ -40,6 +40,7 @@ export default {
         videoID: this.$store.state.videoID,
         lang: e.target.value
       })
+      this.$bus.$emit('resetScroll')
     }
   }
 }
