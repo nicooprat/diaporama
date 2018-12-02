@@ -19,6 +19,7 @@ exports.handler = function(event, context, callback) {
       const playerResponse = JSON.parse(res.player_response)
       const captions = playerResponse.captions.playerCaptionsTracklistRenderer.captionTracks
       const streams = playerResponse.streamingData.formats
+      const details = playerResponse.videoDetails
 
       callback(null, {
         statusCode: 200,
@@ -28,7 +29,8 @@ exports.handler = function(event, context, callback) {
         },
         body: JSON.stringify({
           captions,
-          streams
+          streams,
+          details
         })
       })
     }

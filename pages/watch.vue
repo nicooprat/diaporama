@@ -1,12 +1,7 @@
 <template>
   <article v-if="video">
     <Watch/>
-
-    <select v-on:change="switchLang">
-      <option v-for="caption in video.captions" v-bind:key="caption.vssId" :value="caption.languageCode" :selected="lang === caption.languageCode" v-if="caption.kind !== 'asr'">
-        {{caption.name.simpleText.replace(/\+/g, ' ')}}
-      </option>
-    </select>
+    <Details/>
   </article>
 
   <p v-else>Loading...</p>
@@ -15,10 +10,12 @@
 <script>
 import { mapState } from 'vuex'
 import Watch from '~/components/Watch';
+import Details from '~/components/Details';
 
 export default {
   components: {
     Watch,
+    Details,
   },
   computed: mapState(['video', 'captions', 'lang']),
   async fetch({route, store, redirect}) {
@@ -34,24 +31,10 @@ export default {
       }
     }
   },
-  methods: {
-    async switchLang(e) {
-      await this.$store.dispatch('switchCaptions', {
-        videoID: this.$store.state.videoID,
-        lang: e.target.value
-      })
-      this.$bus.$emit('resetScroll')
-    }
-  }
 }
 </script>
 
 <style lang="scss" scoped>
-  select {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-  }
+
 </style>
 
