@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import YouTubeVideoId from 'youtube-video-id'
+import getYouTubeID from 'get-youtube-id'
 
 export default {
   methods: {
@@ -25,7 +25,7 @@ export default {
       const form = e.target
       const path = form.attributes.action.value
       const value = form.querySelector('[name="v"]').value
-      const videoID = YouTubeVideoId(value)
+      const videoID = getYouTubeID(value)
       this.$router.push({
         path,
         query: {

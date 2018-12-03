@@ -19,8 +19,10 @@ export default {
   watchQuery: ['page'],
   async fetch({route, store, redirect, error}) {
     if(!route.query.v)  {
-      redirect('/')
-      return
+      return error({
+        statusCode: 500,
+        message: 'This doesn\'t look like a Youtube video'
+      })
     }
 
     let video, captions

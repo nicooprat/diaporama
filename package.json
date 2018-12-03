@@ -16,13 +16,13 @@
   },
   "dependencies": {
     "cachios": "^2.0.0",
+    "get-youtube-id": "^1.0.0",
     "normalize.css": "^8.0.1",
     "nuxt": "^2.0.0",
     "scrollmagic": "^2.0.6",
     "vue-bus": "^1.2.0",
     "vuex-router-sync": "^5.0.0",
     "youtube-captions-scraper": "^1.0.3",
-    "youtube-video-id": "^0.0.3",
     "youtube.get-video-info": "^1.0.1"
   },
   "devDependencies": {
