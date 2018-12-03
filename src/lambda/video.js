@@ -31,9 +31,9 @@ exports.handler = function(event, context, callback) {
           captions,
           streams,
           details: {
-            details.title,
-            details.author,
-            details.videoId,
+            title: details.title,
+            author: details.author,
+            videoId: details.videoId,
           }
         })
       })
