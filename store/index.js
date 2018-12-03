@@ -1,5 +1,9 @@
 import Vuex from 'vuex'
-import axios from 'cachios';
+import cachios from 'cachios';
+
+const axios = cachios.create(cachios, {
+  ttl: 3600
+})
 
 const prefix = process.env.NODE_ENV === 'development' ? 'http://10.0.0.44:9000' : '/.netlify/functions'
 
