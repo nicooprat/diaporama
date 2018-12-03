@@ -62,6 +62,7 @@ export default {
   }
 
   .back {
+    flex: 0 0 auto;
     display: flex;
     padding: 1em;
     color: inherit;
@@ -80,6 +81,7 @@ export default {
   }
 
   .title {
+    flex: 1 1 auto;
     font-size: 1em;
     font-weight: normal;
     margin: 0;
@@ -109,10 +111,8 @@ export default {
 
   label {
     flex: 0 1 auto;
-    max-width: 3em;
     display: flex;
     align-items: baseline;
-    width: 100%;
     padding: 1em;
     cursor: pointer;
     position: relative;
