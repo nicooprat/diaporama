@@ -77,7 +77,7 @@ export default {
   watch: {
     currentIndex(index) {
       const currentCaption = this.captions[index]
-      if(currentCaption) this.seek(currentCaption.start)
+      if(currentCaption) this.seek(currentCaption.start + (currentCaption.end - currentCaption.start) / 2)
       else this.seek(0)
     },
   },
