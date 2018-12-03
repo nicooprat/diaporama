@@ -17,6 +17,11 @@ export default {
   },
   computed: mapState(['video', 'captions', 'lang']),
   watchQuery: ['page'],
+  head() {
+    return {
+      title: this.video.details.title.replace(/\+/g, ' '),
+    }
+  },
   async fetch({route, store, redirect, error}) {
     if(!route.query.v)  {
       return error({
