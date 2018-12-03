@@ -1,65 +1,106 @@
 <template>
-  <section class="container">
-    <div>
-      <app-logo/>
-      <h1 class="title">
-        zootrope
-      </h1>
-      <h2 class="subtitle">
-        Turn Youtube videos into scrollable caption-based slideshows
-      </h2>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          class="button--green">Documentation</a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          class="button--grey">GitHub</a>
-      </div>
-    </div>
-  </section>
+  <main>
+    <h1>
+      zootrope
+    </h1>
+    <h2>
+      Turn Youtube videos into <br> scrollable caption-based slideshows
+    </h2>
+
+    <form action="watch" method="GET" @submit.prevent="submit">
+      <input type="text" name="v" placeholder="oavMtUWDBTM" value="s6kNR8Mj0ZE" autofocus required>
+      <button type="submit">
+        <svg width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M13.025 1l-2.847 2.828 6.176 6.176h-16.354v3.992h16.354l-6.176 6.176 2.847 2.828 10.975-11z"/></svg>
+      </button>
+    </form>
+  </main>
 </template>
 
 <script>
-import AppLogo from '~/components/AppLogo.vue'
-
 export default {
-  components: {
-    AppLogo
+  methods: {
+    submit(e) {
+      const form = e.target
+      this.$router.push({
+        path: form.attributes.action.value,
+        query: {
+          v: form.querySelector('[name="v"]').value
+        }
+      })
+    }
   }
 }
 </script>
 
-<style>
-.container {
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
+<style lang="scss" scoped>
+  main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
 
-.title {
-  font-family: "Quicksand", "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; /* 1 */
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
-}
+    &:before {
+      content: '';
+      flex: .5;
+    }
+  }
 
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
+  h1 {
+    color: #ff002c;
+    font-size: 4em;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
 
-.links {
-  padding-top: 15px;
-}
+  h2 {
+    opacity: .5;
+    font-weight: normal;
+  }
+
+  form {
+    display: flex;
+    align-items: center;
+    width: 20em;
+    max-width: 100%;
+    appearance: none;
+    border: 1px solid rgba(black,.1);
+    border-radius: 3px;
+    margin-top: 5vh;
+    background: white;
+
+    &:focus-within {
+      border-color: #ff002c;
+
+      button {
+        color: #ff002c;
+      }
+    }
+  }
+
+  input {
+    flex: 1;
+    appearance: none;
+    border: none;
+    background: none;
+    padding: 1em;
+    outline: none;
+  }
+
+  button {
+    appearance: none;
+    border: none;
+    background: none;
+    flex: 0 0 auto;
+    padding: 1em;
+    outline: none;
+    cursor: pointer;
+
+    svg {
+      width: 1em;
+      height: 1em;
+    }
+  }
 </style>
 

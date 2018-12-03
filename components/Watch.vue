@@ -163,26 +163,30 @@ export default {
     top: 0; left: 0; right: 0;
     z-index: 1;
     background-color: #f8fafd;
-  }
 
-  @media (min-width: 45rem) {
-
-    .video {
+    @media (min-width: 45rem) {
       border-top: 5vh solid #f8fafd;
     }
-  }
 
-  .video:after {
-    content: '';
-    width: 100vw;
-    left: 50%;
-    margin-left: -50vw;
-    top: 100%;
-    height: 10vh;
-    pointer-events: none;
-    border-top: 10vh solid #f8fafd;
-    position: absolute;
-    background-image: linear-gradient(to bottom, #f8fafd, rgba(#f8fafd,0));
+    &:before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: rgba(black,.05);
+    }
+
+    &:after {
+      content: '';
+      width: 100vw;
+      left: 50%;
+      margin-left: -50vw;
+      top: 100%;
+      height: 10vh;
+      pointer-events: none;
+      border-top: 10vh solid #f8fafd;
+      position: absolute;
+      background-image: linear-gradient(to bottom, #f8fafd, rgba(#f8fafd,0));
+    }
   }
 
   video {
@@ -193,7 +197,6 @@ export default {
     top: 0;
     left: 0;
     object-fit: cover;
-    background-color: rgba(0,0,0,.05);
     opacity: 0;
     transition: opacity 250ms;
 
