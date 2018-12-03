@@ -3,8 +3,6 @@
     <Watch/>
     <Details/>
   </article>
-
-  <p v-else>Loading...</p>
 </template>
 
 <script>
@@ -18,17 +16,41 @@ export default {
     Details,
   },
   computed: mapState(['video', 'captions', 'lang']),
-  async fetch({route, store, redirect}) {
-    if(!route.query.v) {
+  watchQuery: ['page'],
+  async fetch({route, store, redirect, error}) {
+    if(!route.query.v)  {
       redirect('/')
-    } else {
-      const video = await store.dispatch('getVideo', route.query.v)
-      if(video.captions) {
-        const captions = await store.dispatch('getCaptions', {
-          videoID: route.query.v,
-          lang: store.state.lang || video.captions[0].languageCode
-        })
-      }
+      return
+    }
+
+    let video, captions
+
+    try {
+      video = await store.dispatch('getVideo', route.query.v)
+    } catch(e) {
+      return error({
+        statusCode: 500,
+        message: 'This video is unavailable'
+      })
+    }
+
+    if(!video.captions) {
+      return error({
+        statusCode: 500,
+        message: 'No caption for this video'
+      })
+    }
+
+    try {
+      captions = await store.dispatch('getCaptions', {
+        videoID: route.query.v,
+        lang: store.state.lang || video.captions[0].languageCode
+      })
+    } catch(e) {
+      return error({
+        statusCode: 500,
+        message: 'Can\'t load captions'
+      })
     }
   },
 }

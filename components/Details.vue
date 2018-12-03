@@ -11,7 +11,7 @@
       <strong>{{lang}}</strong>
       <svg width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M0 7.33l2.829-2.83 9.175 9.339 9.167-9.339 2.829 2.83-11.996 12.17z"/></svg>
       <select v-on:change="switchLang" id="switchLang">
-        <option v-for="caption in video.captions" v-bind:key="caption.vssId" :value="caption.languageCode" :selected="lang === caption.languageCode" v-if="caption.kind !== 'asr'">
+        <option v-for="caption in video.captions" v-bind:key="caption.vssId" :value="caption.languageCode" :selected="lang === caption.languageCode">
           {{caption.name.simpleText.replace(/\+/g, ' ')}}
         </option>
       </select>
@@ -52,7 +52,7 @@ export default {
     z-index: 9;
     background: #f8fafd;
     border-top: 1px solid rgba(black,.1);
-    animation: detailsAppear 500ms;
+    animation: detailsAppear 350ms both;
   }
 
   @keyframes detailsAppear {

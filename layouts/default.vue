@@ -2,7 +2,7 @@
   <nuxt/>
 </template>
 
-<style>
+<style lang="scss">
   @import "normalize.css/normalize.css";
 
   html, body, #__nuxt, #__layout {
@@ -20,6 +20,19 @@
     -webkit-text-size-adjust: 100%;
     font-size: 16px;
     background-color: #f8fafd;
+    color: #484849;
+  }
+
+  // Fix weird bug on transition to error page
+  #__layout > :first-child:not(:only-child) {
+    display: none;
+  }
+
+  @keyframes appear {
+    from {
+      opacity: 0;
+      transform: translateY(10vh);
+    }
   }
 </style>
 

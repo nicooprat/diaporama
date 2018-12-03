@@ -8,7 +8,7 @@
     </h2>
 
     <form action="watch" method="GET" @submit.prevent="submit">
-      <input type="text" name="v" placeholder="oavMtUWDBTM" value="s6kNR8Mj0ZE" autofocus required>
+      <input type="text" name="v" placeholder="oavMtUWDBTM" value="https://www.youtube.com/watch?v=oavMtUWDBTM" autofocus required>
       <button type="submit">
         <svg width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M13.025 1l-2.847 2.828 6.176 6.176h-16.354v3.992h16.354l-6.176 6.176 2.847 2.828 10.975-11z"/></svg>
       </button>
@@ -50,6 +50,10 @@ export default {
       content: '';
       flex: .5;
     }
+
+    > * {
+      animation: appear 350ms both;
+    }
   }
 
   h1 {
@@ -62,6 +66,7 @@ export default {
   h2 {
     opacity: .5;
     font-weight: normal;
+    animation-delay: 100ms;
   }
 
   form {
@@ -72,8 +77,9 @@ export default {
     appearance: none;
     border: 1px solid rgba(black,.1);
     border-radius: 3px;
-    margin-top: 5vh;
+    margin-top: 1em;
     background: white;
+    animation-delay: 200ms;
 
     &:focus-within {
       border-color: #ff002c;
@@ -90,6 +96,7 @@ export default {
     border: none;
     background: none;
     padding: 1em;
+    padding-right: 0;
     outline: none;
   }
 
