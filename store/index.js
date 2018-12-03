@@ -47,13 +47,6 @@ const createStore = () => {
         const {data: captions} = await axios.get(`${prefix}/captions?v=${videoID}&l=${lang}`)
         store.commit('setCaptions', captions)
         store.commit('setLang', lang)
-        this.$router.replace({
-          query: {
-            ...this.$router.currentRoute.query,
-            i: 0,
-            l: lang
-          }
-        })
         return captions
       },
       async switchCaptions(store, {videoID, lang}) {
@@ -64,14 +57,19 @@ const createStore = () => {
         store.commit('setIndex', 0)
         return captions
       },
-      setIndex (state, index) {
+      setIndex(store, index) {
+        store.commit('setIndex', index)
+        store.dispatch('updateURL')
+      },
+      updateURL(store) {
         this.$router.replace({
+          ...this.$router.currentRoute,
           query: {
-            ...this.$router.currentRoute.query,
-            i: index
+            v: store.state.videoID,
+            i: store.state.currentIndex,
+            l: store.state.lang
           }
         })
-        state.commit('setIndex', index)
       }
     }
   })
