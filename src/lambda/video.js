@@ -30,7 +30,11 @@ exports.handler = function(event, context, callback) {
         body: JSON.stringify({
           captions,
           streams,
-          details
+          details: {
+            details.title,
+            details.author,
+            details.videoId,
+          }
         })
       })
     }
