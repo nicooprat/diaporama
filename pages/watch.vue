@@ -23,7 +23,14 @@ export default {
     }
   },
   async fetch({route, store, redirect, error}) {
-    if(!route.query.v)  {
+    if(!route.query.v) {
+      return error({
+        statusCode: 500,
+        message: 'Please enter a Youtube video URL or ID'
+      })
+    }
+
+    if(!route.query.v.match(/[a-zA-Z0-9_-]{6,11}/)) {
       return error({
         statusCode: 500,
         message: 'This doesn\'t look like a Youtube video'
