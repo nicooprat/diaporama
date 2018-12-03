@@ -1,5 +1,7 @@
 <template>
   <main>
+    <img src="~assets/logo.svg" alt="logo">
+
     <h1>
       zootrope
     </h1>
@@ -56,17 +58,23 @@ export default {
     }
   }
 
+  img {
+    width: 6em;
+    margin-bottom: 1em;
+  }
+
   h1 {
-    color: #ff002c;
+    color: #f9183d;
     font-size: 4em;
     margin-top: 0;
     margin-bottom: 0;
+    animation-delay: 100ms;
   }
 
   h2 {
-    opacity: .5;
     font-weight: normal;
-    animation-delay: 100ms;
+    color: rgba(black,.5);
+    animation-delay: 200ms;
   }
 
   form {
@@ -79,13 +87,13 @@ export default {
     border-radius: 3px;
     margin-top: 1em;
     background: white;
-    animation-delay: 200ms;
+    animation-delay: 300ms;
 
     &:focus-within {
-      border-color: #ff002c;
+      border-color: #f9183d;
 
       button {
-        color: #ff002c;
+        color: #f9183d;
       }
     }
   }
@@ -108,6 +116,7 @@ export default {
     padding: 1em;
     outline: none;
     cursor: pointer;
+    color: rgba(black,.6);
 
     svg {
       width: 1em;

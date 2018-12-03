@@ -69,7 +69,7 @@ export default {
 
     &:hover,
     &:focus {
-      color: #ff002c;
+      color: #f9183d;
     }
 
     svg {
@@ -91,7 +91,7 @@ export default {
 
     &:hover,
     &:focus {
-      color: #ff002c;
+      color: #f9183d;
     }
 
     strong, small {
@@ -120,7 +120,7 @@ export default {
 
     &:hover,
     &:focus {
-      color: #ff002c;
+      color: #f9183d;
     }
 
     strong {

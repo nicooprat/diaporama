@@ -49,7 +49,7 @@
   a {
     display: flex;
     align-items: center;
-    color: #ff002c;
+    color: #f9183d;
     text-decoration: none;
     padding: 1em;
     border-radius: 3px;
@@ -58,8 +58,8 @@
 
     &:hover,
     &:focus {
-      background-color: #ff002c;
-      border-color: #ff002c;
+      background-color: #f9183d;
+      border-color: #f9183d;
       color: white;
     }
 

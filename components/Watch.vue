@@ -223,7 +223,7 @@ export default {
   }
 
   .progress {
-    background-color: #ff002c;
+    background-color: #f9183d;
   }
 
   .loaded {
@@ -283,7 +283,7 @@ export default {
     margin-top: auto;
     margin-bottom: -.5vh;
     border-radius: 100%;
-    background: #ff002c;
+    background: #f9183d;
     border: none;
   }
 
