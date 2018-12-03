@@ -6949,6 +6949,10 @@ youtube-captions-scraper@^1.0.3:
     lodash "^4.17.4"
     striptags "^3.1.0"
 
+youtube-video-id@^0.0.3:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/youtube-video-id/-/youtube-video-id-0.0.3.tgz#57dd6cd6778a863a2daf0f0bf3e70822cbfb1169"
+
 youtube.get-video-info@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/youtube.get-video-info/-/youtube.get-video-info-1.0.1.tgz#a72072f4bb346b76b9536b391832ac8d38abb905"

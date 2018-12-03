@@ -17,14 +17,19 @@
 </template>
 
 <script>
+import YouTubeVideoId from 'youtube-video-id'
+
 export default {
   methods: {
     submit(e) {
       const form = e.target
+      const path = form.attributes.action.value
+      const value = form.querySelector('[name="v"]').value
+      const videoID = YouTubeVideoId(value)
       this.$router.push({
-        path: form.attributes.action.value,
+        path,
         query: {
-          v: form.querySelector('[name="v"]').value
+          v: videoID
         }
       })
     }
