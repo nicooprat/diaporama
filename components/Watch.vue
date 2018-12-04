@@ -73,9 +73,7 @@ export default {
   watch: {
     currentIndex: {
       handler(index) {
-        const currentCaption = this.captions && this.captions[index]
-        if(currentCaption) this.seek(currentCaption.start + (currentCaption.end - currentCaption.start) / 2)
-        else this.seek(0)
+        this.captions && this.seek(index)
       },
       immediate: true
     },
@@ -87,7 +85,6 @@ export default {
       const newIndex = this.captions.reduce((previous, caption, index) => {
         return caption.start < newTime ? index : previous
       }, 0)
-      this.seek(newTime)
       this.$store.dispatch('setIndex', newIndex)
       this.controller.scrollTo(this.scenes[newIndex])
     },
@@ -111,8 +108,11 @@ export default {
       const seconds = Math.floor(s%60)
       return [minutes < 10 ? '0'+minutes : minutes, seconds < 10 ? '0'+seconds : seconds].join(':')
     },
-    seek(time) {
+    seek(index) {
       if(!this.$el) return
+      if(!this.captions) return
+      const currentCaption = this.captions[index]
+      const time = currentCaption.start + (currentCaption.end - currentCaption.start) / 2
       const video = this.$el.querySelector('video')
       video.currentTime = parseFloat(time)
       this.$data.currentTime = parseInt(time)
