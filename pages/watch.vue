@@ -23,7 +23,7 @@ export default {
     if(!this.$route.query.v) {
       return this.$nuxt.error({
         statusCode: 500,
-        message: 'Please enter a Youtube video URL or ID'
+        message: 'Please enter a valid Youtube video URL'
       })
     }
 
