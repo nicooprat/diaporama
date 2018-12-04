@@ -18,7 +18,10 @@ export default {
   computed: mapState(['video', 'captions', 'lang']),
   watchQuery: ['v', 'l'],
   async mounted() {
-    this.$store.dispatch('resetState')
+    // Avoid replacing current state if reload or prev/next button
+    if( !this.$route.query.i ) {
+      this.$store.dispatch('resetState')
+    }
 
     if(!this.$route.query.v) {
       return this.$nuxt.error({
