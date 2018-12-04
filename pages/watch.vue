@@ -16,12 +16,7 @@ export default {
     Details,
   },
   computed: mapState(['video', 'captions', 'lang']),
-  watchQuery: ['page'],
-  head() {
-    return {
-      title: this.video && this.video.details.title.replace(/\+/g, ' '),
-    }
-  },
+  watchQuery: ['v', 'l'],
   async created() {
     this.$store.dispatch('resetState')
 

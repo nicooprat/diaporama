@@ -43,6 +43,11 @@ export default {
   components: {
     Caption
   },
+  head() {
+    return {
+      title: this.video.details.title.replace(/\+/g, ' '),
+    }
+  },
   data() {
     return {
       scrollama: null,
