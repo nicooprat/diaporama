@@ -83,28 +83,21 @@ export default {
     this.controller && this.controller.destroy(true)
   },
   watch: {
-    currentIndex: {
-      handler(index) {
-        this.captions && this.seek(index)
-      },
-      immediate: true
+    currentIndex(index) {
+      this.captions && this.seekToIndex(index)
     },
-    captions: {
-      handler(captions) {
-        // When captions loaded, seek to current one
-        // Avoid video stuck on first frame
-        if(!captions) return
-        this.seek(this.currentIndex)
-      },
-      immediate: true
+    captions(captions) {
+      // When captions loaded, seek to current one
+      // Avoid video stuck on first frame
+      if(!captions) return
+      this.seekToIndex(this.currentIndex)
     },
     currentScrub(time) {
-      const video = this.$el.querySelector('video')
-      video.currentTime = time
+      if(!time) return
+      this.seekToTime(time)
     },
     currentTime(time) {
-      const video = this.$el.querySelector('video')
-      video.currentTime = time
+      this.seekToTime(time)
     }
   },
   methods: {
@@ -114,8 +107,8 @@ export default {
       this.currentScrub = time
     },
     endScrub(e) {
-      this.currentScrub = 0
-      this.seek(this.currentIndex)
+      this.currentScrub = false
+      this.seekToTime(this.currentTime)
     },
     drag(e) {
       const percent = e.target.value
@@ -146,13 +139,16 @@ export default {
       const seconds = Math.floor(s%60)
       return [minutes < 10 ? '0'+minutes : minutes, seconds < 10 ? '0'+seconds : seconds].join(':')
     },
-    seek(index = this.currentIndex) {
+    seekToIndex(index) {
       if(!this.$el) return
       if(!this.captions) return
       const currentCaption = this.captions[index]
       const time = currentCaption.start + currentCaption.dur / 2
       this.currentTime = time
-      return time
+    },
+    seekToTime(time) {
+      const video = this.$el.querySelector('video')
+      video.currentTime = time
     },
     init(e) {
       e.target.pause() // Autoplay then pause immediately, fix iOS bug
@@ -166,7 +162,7 @@ export default {
   computed: {
     ...mapState(['video', 'captions', 'currentIndex']),
     percentSeek() {
-      return this.seek() / this.duration * 100
+      return this.seekToIndex() / this.duration * 100
     },
     stream() {
       const stream = this.video.streams.filter(i => i.itag == this.$data.itag)
