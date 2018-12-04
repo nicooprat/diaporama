@@ -13,7 +13,9 @@
         :data-loaded="loaded > 0"
         @progress="progress">
       </video>
-      <div v-if="loaded" class="loaded" :style="{transform: 'scaleX('+ loaded / duration +')'}"></div>
+      <div class="buffereds">
+        <div v-if="loaded" v-for="(buffered, i) in buffereds" :key="i" class="buffered" :style="{left: buffered.start / duration * 100 + '%', width:  (buffered.end - buffered.start) / duration * 100 + '%'}"></div>
+      </div>
       <div v-if="loaded" class="progress" :style="{transform: 'scaleX('+ currentTime / duration +')'}"></div>
       <div v-if="loaded" class="currentTime">{{formatTime(currentTime)}}</div>
       <div v-if="loaded" class="duration">{{formatTime(duration)}}</div>
@@ -31,7 +33,7 @@
         :index="index"
         :data-ready="scrolledDown"
         :data-active="index == currentIndex"
-        :data-loaded="caption.start < loaded"
+        :data-loaded="isCaptionLoaded(caption)"
         :key="index"/>
     </ul>
   </main>
@@ -59,6 +61,7 @@ export default {
       scrollama: null,
       loaded: 0,
       duration: 0,
+      buffereds: [],
       currentTime: 0,
       currentScrub: 0,
       scrolledDown: false,
@@ -159,9 +162,23 @@ export default {
       this.$data.duration = parseInt(e.target.duration)
     },
     progress(e) {
-      const buffered = e.target.buffered
-      this.$data.loaded = buffered.end(buffered.length-1)
+      const buffereds = e.target.buffered
+      let i = buffereds.length
+      while(i--) {
+        this.buffereds[i] = {
+          start: buffereds.start(i),
+          end: buffereds.end(i),
+        }
+      }
+      this.$data.loaded = buffereds.end(buffereds.length-1)
     },
+    isCaptionLoaded(caption) {
+      debugger
+      return !!this.buffereds.find(buffered => {
+        const time = caption.start + caption.dur/2
+        return time >= buffered.start && time <= buffered.end
+      })
+    }
   },
   computed: {
     ...mapState(['video', 'captions', 'currentIndex']),
@@ -248,22 +265,26 @@ export default {
   }
 
   .progress,
-  .loaded {
+  .buffereds {
     height: 1vh;
     position: absolute;
     z-index: 2;
-    width: 99.9%; // Fix iOS bug
-    left: 0; bottom: 0;
-    transform: scaleX(0);
-    transform-origin: left;
+    bottom: 0; left: 0; right: 0;
   }
 
   .progress {
     background-color: #f9183d;
+    transform-origin: left center;
   }
 
-  .loaded {
-    background-color: rgba(255,255,255,.5);
+  .buffereds {
+    opacity: .5;
+  }
+
+  .buffered {
+    height: 100%;
+    position: absolute;
+    background-color: white;
   }
 
   .currentTime,
