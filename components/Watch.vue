@@ -77,6 +77,15 @@ export default {
       },
       immediate: true
     },
+    captions: {
+      handler(captions) {
+        // When captions loaded, seek to current one
+        // Avoid video stuck on first frame
+        if(!captions) return
+        this.seek(this.currentIndex)
+      },
+      immediate: true
+    },
   },
   methods: {
     drag(e) {
