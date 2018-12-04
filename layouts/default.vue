@@ -19,8 +19,8 @@
     -ms-text-size-adjust: 100%;
     -webkit-text-size-adjust: 100%;
     font-size: 16px;
-    background-color: #f8fafd;
-    color: #484849;
+    background-color: hsl(216, 56%, 98%);
+    color: hsl(214, 16%, 35%);
   }
 
   // Fix weird bug on transition to error page
