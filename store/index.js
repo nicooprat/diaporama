@@ -56,7 +56,15 @@ const createStore = () => {
       },
       async getCaptions(store, {videoID, lang}) {
         const {data: captions} = await axios.get(`${prefix}/captions?v=${videoID}&l=${lang}`)
-        store.commit('setCaptions', captions)
+
+        store.commit('setCaptions', captions.map(caption => {
+          // Sanitize floats
+          return {
+            start: parseFloat(caption.start),
+            dur: parseFloat(caption.dur),
+            text: caption.text,
+          }
+        }))
         store.commit('setLang', lang)
         return captions
       },

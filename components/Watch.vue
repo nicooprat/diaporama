@@ -1,18 +1,24 @@
 <template>
   <main>
-    <section v-if="video" class="video" :style="{'--ratio': stream.height / stream.width}">
+    <section
+      v-if="video"
+      class="video"
+      :style="{'--ratio': stream.height / stream.width}"
+      @mousemove="scrub"
+      @mouseleave="endScrub">
       <video
         :src="stream.url"
         :width="stream.width"
         :height="stream.height" muted playsinline autoplay v-on:loadeddata="init"
         :data-loaded="loaded > 0"
-        v-on:progress="progress">
+        @progress="progress">
       </video>
       <div v-if="loaded" class="loaded" :style="{transform: 'scaleX('+ loaded / duration +')'}"></div>
       <div v-if="loaded" class="progress" :style="{transform: 'scaleX('+ currentTime / duration +')'}"></div>
       <div v-if="loaded" class="currentTime">{{formatTime(currentTime)}}</div>
       <div v-if="loaded" class="duration">{{formatTime(duration)}}</div>
-      <input v-if="loaded" type="range" class="handle" step="0.1" @input="drag" :value="percentSeek">
+      <div v-if="loaded && currentScrub > 0" class="scrub" :style="{left: currentScrub / duration * 100 + '%'}"></div>
+      <input v-if="loaded" type="range" class="handle" step="0.1" @input="drag" :value="currentTime / duration * 100">
     </section>
 
     <ul v-if="captions">
@@ -54,6 +60,7 @@ export default {
       loaded: 0,
       duration: 0,
       currentTime: 0,
+      currentScrub: 0,
       scrolledDown: false,
       controller: null,
       scenes: [],
@@ -91,8 +98,25 @@ export default {
       },
       immediate: true
     },
+    currentScrub(time) {
+      const video = this.$el.querySelector('video')
+      video.currentTime = time
+    },
+    currentTime(time) {
+      const video = this.$el.querySelector('video')
+      video.currentTime = time
+    }
   },
   methods: {
+    scrub(e) {
+      const percent = (e.pageX - e.target.getBoundingClientRect().left) / e.target.clientWidth
+      const time = this.duration * percent
+      this.currentScrub = time
+    },
+    endScrub(e) {
+      this.currentScrub = 0
+      this.seek(this.currentIndex)
+    },
     drag(e) {
       const percent = e.target.value
       const newTime = this.duration * percent/100
@@ -122,14 +146,13 @@ export default {
       const seconds = Math.floor(s%60)
       return [minutes < 10 ? '0'+minutes : minutes, seconds < 10 ? '0'+seconds : seconds].join(':')
     },
-    seek(index) {
+    seek(index = this.currentIndex) {
       if(!this.$el) return
       if(!this.captions) return
       const currentCaption = this.captions[index]
-      const time = currentCaption.start + (currentCaption.end - currentCaption.start) / 2
-      const video = this.$el.querySelector('video')
-      video.currentTime = parseFloat(time)
-      this.$data.currentTime = parseInt(time)
+      const time = currentCaption.start + currentCaption.dur / 2
+      this.currentTime = time
+      return time
     },
     init(e) {
       e.target.pause() // Autoplay then pause immediately, fix iOS bug
@@ -143,7 +166,7 @@ export default {
   computed: {
     ...mapState(['video', 'captions', 'currentIndex']),
     percentSeek() {
-      return parseFloat(this.currentTime / this.duration * 100)
+      return this.seek() / this.duration * 100
     },
     stream() {
       const stream = this.video.streams.filter(i => i.itag == this.$data.itag)
@@ -267,6 +290,12 @@ export default {
 
   .duration {
     right: 0;
+  }
+
+  .scrub {
+    position: absolute;
+    top: 0; bottom: 0;
+    border-left: 1px solid rgba(white,.5);
   }
 
   .handle {
