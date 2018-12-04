@@ -17,7 +17,7 @@ export default {
   },
   computed: mapState(['video', 'captions', 'lang']),
   watchQuery: ['v', 'l'],
-  async created() {
+  async mounted() {
     this.$store.dispatch('resetState')
 
     if(!this.$route.query.v) {
