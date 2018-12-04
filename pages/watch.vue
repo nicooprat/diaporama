@@ -19,19 +19,21 @@ export default {
   watchQuery: ['page'],
   head() {
     return {
-      title: this.video.details.title.replace(/\+/g, ' '),
+      title: this.video && this.video.details.title.replace(/\+/g, ' '),
     }
   },
-  async fetch({route, store, redirect, error}) {
-    if(!route.query.v) {
-      return error({
+  async created() {
+    this.$store.dispatch('resetState')
+
+    if(!this.$route.query.v) {
+      return this.$nuxt.error({
         statusCode: 500,
         message: 'Please enter a Youtube video URL or ID'
       })
     }
 
-    if(!route.query.v.match(/[a-zA-Z0-9_-]{6,11}/)) {
-      return error({
+    if(!this.$route.query.v.match(/[a-zA-Z0-9_-]{6,11}/)) {
+      return this.$nuxt.error({
         statusCode: 500,
         message: 'This doesn\'t look like a Youtube video'
       })
@@ -40,28 +42,28 @@ export default {
     let video, captions
 
     try {
-      video = await store.dispatch('getVideo', route.query.v)
+      video = await this.$store.dispatch('getVideo', this.$route.query.v)
     } catch(e) {
-      return error({
+      return this.$nuxt.error({
         statusCode: 500,
         message: 'This video is unavailable'
       })
     }
 
     if(!video.captions) {
-      return error({
+      return this.$nuxt.error({
         statusCode: 500,
         message: 'No caption for this video'
       })
     }
 
     try {
-      captions = await store.dispatch('getCaptions', {
-        videoID: route.query.v,
-        lang: store.state.lang || video.captions[0].languageCode
+      captions = await this.$store.dispatch('getCaptions', {
+        videoID: this.$route.query.v,
+        lang: this.$store.state.lang || video.captions[0].languageCode
       })
     } catch(e) {
-      return error({
+      return this.$nuxt.error({
         statusCode: 500,
         message: 'Can\'t load captions'
       })

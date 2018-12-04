@@ -18,9 +18,12 @@ export default {
   },
   mounted() {
     if(!process.browser) return
+    const firstSibling = this.$el.parentNode.firstElementChild
+    const offset = (firstSibling.offsetTop + firstSibling.clientHeight/2) / window.innerHeight
     this.scene = new ScrollMagic.Scene({
       triggerElement: this.$el,
       duration: this.$el.clientHeight,
+      triggerHook: offset,
     })
     .on('enter', e => e.state === 'DURING' && this.$store.dispatch('setIndex', this.$props.index))
     this.$emit('addScene', {

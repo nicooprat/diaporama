@@ -5,7 +5,7 @@ const axios = cachios.create(cachios, {
   ttl: 3600
 })
 
-const prefix = process.env.NODE_ENV === 'development' ? 'http://10.0.0.44:9000' : '/.netlify/functions'
+const prefix = process.env.NODE_ENV === 'development' ? 'http://localhost:9000' : '/.netlify/functions'
 
 const createStore = () => {
   return new Vuex.Store({
@@ -32,6 +32,13 @@ const createStore = () => {
       },
       setIndex(state, index) {
         state.currentIndex = index
+      },
+      resetState(state) {
+        state.video = null
+        state.videoID = null
+        state.captions = null
+        state.lang = null
+        state.currentIndex = 0
       }
     },
 
@@ -74,6 +81,9 @@ const createStore = () => {
             l: store.state.lang
           }
         })
+      },
+      resetState(store) {
+        store.commit('resetState')
       }
     }
   })

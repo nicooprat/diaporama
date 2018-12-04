@@ -1,6 +1,6 @@
 <template>
   <main>
-    <section class="video" :style="{'--ratio': stream.height / stream.width}">
+    <section v-if="video" class="video" :style="{'--ratio': stream.height / stream.width}">
       <video
         :src="stream.url"
         :width="stream.width"
@@ -8,8 +8,8 @@
         :data-loaded="loaded > 0"
         v-on:progress="progress">
       </video>
-      <div class="loaded" :style="{transform: 'scaleX('+ loaded / duration +')'}"></div>
-      <div class="progress" :style="{transform: 'scaleX('+ currentTime / duration +')'}"></div>
+      <div v-if="loaded" class="loaded" :style="{transform: 'scaleX('+ loaded / duration +')'}"></div>
+      <div v-if="loaded" class="progress" :style="{transform: 'scaleX('+ currentTime / duration +')'}"></div>
       <div v-if="loaded" class="currentTime">{{formatTime(currentTime)}}</div>
       <div v-if="loaded" class="duration">{{formatTime(duration)}}</div>
       <input v-if="loaded" type="range" class="handle" step="0.1" @input="drag" :value="percentSeek">
@@ -64,10 +64,6 @@ export default {
     window.addEventListener('resize', this.switchVideoFormat)
     // When store dispatch
     this.$bus.$on('resetScroll', e => this.controller.scrollTo(0))
-    // Set caption scroll trigger offset according to first child position
-    const el = this.scenes[0].triggerElement()
-    const offset = (el.offsetTop + el.clientHeight/2) / window.innerHeight
-    this.scenes.forEach(scene => scene.triggerHook(offset))
   },
   beforeDestroy() {
     if(!process.browser) return
@@ -75,10 +71,13 @@ export default {
     this.controller && this.controller.destroy(true)
   },
   watch: {
-    currentIndex(index) {
-      const currentCaption = this.captions[index]
-      if(currentCaption) this.seek(currentCaption.start + (currentCaption.end - currentCaption.start) / 2)
-      else this.seek(0)
+    currentIndex: {
+      handler(index) {
+        const currentCaption = this.captions && this.captions[index]
+        if(currentCaption) this.seek(currentCaption.start + (currentCaption.end - currentCaption.start) / 2)
+        else this.seek(0)
+      },
+      immediate: true
     },
   },
   methods: {
