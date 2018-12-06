@@ -17,7 +17,15 @@ $ npm start
 
 # generate static project
 $ npm run generate
+
+# Run Netlify lambda functions
+npm start:lambda
 ```
 
 For detailed explanation on how things work, checkout the [Nuxt.js docs](https://github.com/nuxt/nuxt.js).
 
+## Credits
+
+See `package.json` for open source dependencies.
+
+Icons from [http://iconmonstr.com/](http://iconmonstr.com/)
