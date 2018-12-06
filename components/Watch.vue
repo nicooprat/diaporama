@@ -10,6 +10,7 @@
         @scrollToIndex="scrollToIndex"
         :caption="caption"
         :index="index"
+        :initialIndex="initialIndex"
         :data-ready="scrolledDown"
         :data-active="index == currentIndex"
         :data-loaded="caption.start < loaded"
@@ -34,6 +35,7 @@ export default {
   },
   data() {
     return {
+      initialIndex: 0,
       loaded: 0,
       scrolledDown: false,
       controller: null,
@@ -42,6 +44,7 @@ export default {
   },
   created() {
     if(!process.browser) return
+    this.initialIndex = this.currentIndex
     this.controller = new ScrollMagic.Controller()
   },
   mounted() {
