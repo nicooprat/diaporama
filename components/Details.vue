@@ -1,5 +1,5 @@
 <template>
-  <header>
+  <header :data-visible="visible">
     <nuxt-link class="back" to="/" title="Back home">
       <svg width="24" height="24" viewBox="0 0 24 24"><path transform="rotate(180) translate(-24,-24)" fill="currentColor" d="M13.025 1l-2.847 2.828 6.176 6.176h-16.354v3.992h16.354l-6.176 6.176 2.847 2.828 10.975-11z"/></svg>
     </nuxt-link>
@@ -23,7 +23,17 @@
 import { mapState } from 'vuex'
 
 export default {
-  computed: mapState(['video', 'lang']),
+  computed: mapState(['video', 'lang', 'currentIndex']),
+  data() {
+    return {
+      visible: true
+    }
+  },
+  watch: {
+    currentIndex(index, oldIndex) {
+      this.visible = index < oldIndex
+    }
+  },
   methods: {
     async switchLang(e) {
       await this.$store.dispatch('switchCaptions', {
@@ -50,12 +60,11 @@ export default {
     right: 0;
     z-index: 9;
     background: #f8fafd;
-    border-top: 1px solid rgba(black,.1);
-    animation: detailsAppear 350ms both;
-  }
+    box-shadow: 0 0 0 1px rgba(black,.1);
+    transform: translateY(0%);
+    transition: transform 350ms;
 
-  @keyframes detailsAppear {
-    from {
+    &:not([data-visible]) {
       transform: translateY(100%);
     }
   }
