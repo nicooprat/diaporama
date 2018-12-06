@@ -19,7 +19,7 @@ export default {
   mounted() {
     if(!process.browser) return
     const firstSibling = this.$el.parentNode.firstElementChild
-    const offset = (firstSibling.offsetTop + firstSibling.clientHeight/2) / window.innerHeight
+    const offset = firstSibling.offsetTop / window.innerHeight
     this.scene = new ScrollMagic.Scene({
       triggerElement: this.$el,
       duration: this.$el.clientHeight,

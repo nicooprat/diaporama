@@ -90,6 +90,7 @@ export default {
     padding: 1em;
     overflow: hidden;
     outline: none;
+    text-align: center;
 
     &:hover,
     &:focus {
