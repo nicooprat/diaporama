@@ -11,12 +11,13 @@
       :data-loaded="loaded > 0"
       @progress="progress">
     </video>
+    <div class="loading" v-if="currentTime > loaded"></div>
     <div v-if="loaded" class="loaded" :style="{transform: 'scaleX('+ loaded / duration +')'}"></div>
     <div v-if="loaded" class="progress" :style="{transform: 'scaleX('+ currentTime / duration +')'}"></div>
     <div v-if="loaded" class="currentTime">{{formatTime(currentTime)}}</div>
     <div v-if="loaded" class="duration">{{formatTime(duration)}}</div>
     <div v-if="loaded && currentScrub > 0" class="scrub" :style="{left: currentScrub / duration * 100 + '%'}"></div>
-    <input v-if="loaded" type="range" class="handle" step="0.1" @input="drag" :value="currentTime / duration * 100">
+    <input v-if="loaded" type="range" class="handle" min="0" max="100" step="0.1" @input="drag" :value="currentTime ? currentTime / duration * 100 : 0">
   </section>
 </template>
 
@@ -164,13 +165,44 @@ export default {
 
     // Hide play button on iOS
     &::-webkit-media-controls-start-playback-button {
-      display: none!important;
+      display: none !important;
       -webkit-appearance: none;
+    }
+
+    &[data-loaded] {
+      opacity: 1;
     }
   }
 
-  video[data-loaded] {
-    opacity: 1;
+  .loading {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(white,.5);
+    animation: fadeIn 200ms 500ms both;
+    overflow: hidden;
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+    }
+
+    &:after {
+      content: '';
+      position: absolute;
+      top: 0; bottom: 0; left: 0;
+      width: 20%;
+      background: linear-gradient(to right, rgba(white,0), ease-in-out, rgba(white,.5));
+      opacity: .5;
+      animation: loading 2s infinite both linear;
+
+      @keyframes loading {
+        from {
+          transform: translateX(-500%);
+        }
+        to {
+          transform: translateX(500%);
+        }
+      }
+    }
   }
 
   .progress,

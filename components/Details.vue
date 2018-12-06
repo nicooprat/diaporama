@@ -7,7 +7,7 @@
       <small>{{video.details.author.replace(/\+/g, ' ')}}</small>
       <strong>{{video.details.title.replace(/\+/g, ' ')}}</strong>
     </a>
-    <label for="switchLang">
+    <label for="switchLang" v-if="video.captions">
       <strong>{{lang}}</strong>
       <svg width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M0 7.33l2.829-2.83 9.175 9.339 9.167-9.339 2.829 2.83-11.996 12.17z"/></svg>
       <select v-on:change="switchLang" id="switchLang">

@@ -89,11 +89,8 @@ export default {
     text-align: center;
     color: #2c3e50;
     font-size: calc(.5em + 2vmax);
-  }
 
-  @media (min-width: 1200px) {
-
-    main {
+    @media (min-width: 1200px) {
       font-size: 2em;
     }
   }
@@ -102,11 +99,8 @@ export default {
     list-style-type: none;
     padding: 0 5vh;
     margin: 25vh auto;
-  }
 
-  @media (min-width: 520px) {
-
-    ul {
+    @media (min-width: 520px) {
       margin-top: 20vh;
     }
   }
