@@ -45,22 +45,27 @@ export default {
     this.controller = new ScrollMagic.Controller()
   },
   mounted() {
-    if(!process.browser) return
     window.addEventListener('resize', this.switchVideoFormat)
     // When store dispatch
     this.$bus.$on('resetScroll', e => this.controller.scrollTo(0))
   },
   beforeDestroy() {
-    if(!process.browser) return
     window.removeEventListener('resize', this.switchVideoFormat)
     this.controller && this.controller.destroy(true)
   },
   methods: {
-    addScene({scene, index}) {
+    addScene({triggerElement, duration, triggerHook, index}) {
+      const scene = new ScrollMagic.Scene({
+        triggerElement,
+        duration,
+        triggerHook,
+      })
+      .on('enter', e => e.state === 'DURING' && this.$store.dispatch('setIndex', index))
       this.controller.addScene(scene)
       this.scenes[index] = scene
     },
-    removeScene({scene, index}) {
+    removeScene(index) {
+      const scene = this.scenes[index]
       this.controller.removeScene(scene)
       delete this.scenes[index]
     },

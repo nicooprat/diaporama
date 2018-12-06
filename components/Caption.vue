@@ -5,10 +5,6 @@
 </template>
 
 <script>
-if(process.browser) {
-  var ScrollMagic = require('scrollmagic/scrollmagic/uncompressed/ScrollMagic')
-}
-
 export default {
   props: ['index', 'caption'],
   data() {
@@ -17,18 +13,14 @@ export default {
     }
   },
   mounted() {
-    if(!process.browser) return
     const firstSibling = this.$el.parentNode.firstElementChild
     const offset = firstSibling.offsetTop / window.innerHeight
-    this.scene = new ScrollMagic.Scene({
+
+    this.$emit('addScene', {
       triggerElement: this.$el,
       duration: this.$el.clientHeight,
       triggerHook: offset,
-    })
-    .on('enter', e => e.state === 'DURING' && this.$store.dispatch('setIndex', this.$props.index))
-    this.$emit('addScene', {
-      scene: this.scene,
-      index: this.$props.index
+      index: this.$props.index,
     })
 
     if(this.$store.state.currentIndex === this.$props.index) {
@@ -36,10 +28,7 @@ export default {
     }
   },
   destroyed() {
-    this.$emit('removeScene', {
-      scene: this.scene,
-      index: this.$props.index
-    })
+    this.$emit('removeScene', this.$props.index)
   }
 }
 </script>
