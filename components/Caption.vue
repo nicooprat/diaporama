@@ -1,6 +1,8 @@
 <template>
-  <li class="caption" :data-start="caption.start" :style="{animationDelay: Math.min(500,Math.max(0,(index-$store.state.currentIndex)))*50+'ms'}">
-    {{caption.text}}
+  <li class="caption" :data-start="caption.start" :style="{'--delay': Math.min(500,Math.max(0,(index-$store.state.currentIndex)))*50+'ms'}">
+    <a :href="`#${index}`" @click.prevent.stop="activate">
+      {{caption.text}}
+    </a>
   </li>
 </template>
 
@@ -20,15 +22,21 @@ export default {
       triggerElement: this.$el,
       duration: this.$el.clientHeight,
       triggerHook: offset,
-      index: this.$props.index,
+      index: this.index,
     })
 
-    if(this.$store.state.currentIndex === this.$props.index) {
-      this.$emit('scrollToIndex', this.$props.index)
+    if(this.$store.state.currentIndex === this.index) {
+      this.$emit('scrollToIndex', this.index)
     }
   },
   destroyed() {
-    this.$emit('removeScene', this.$props.index)
+    this.$emit('removeScene', this.index)
+  },
+  methods: {
+    activate() {
+      this.$emit('scrollToIndex', this.index)
+      this.$store.dispatch('setIndex', this.index)
+    }
   }
 }
 </script>
@@ -38,7 +46,7 @@ export default {
     margin: 1px 0 0 0;
     position: relative;
     padding: 2.5vh .5em;
-    animation: appear 250ms both paused;
+    animation: appear 250ms var(--delay) both paused;
   }
 
   li[data-ready] {
@@ -55,6 +63,12 @@ export default {
     top: 0; left: 0; right: 0; bottom: 0;
     background-color: #f8fafd;
     opacity: .75;
+  }
+
+  a {
+    display: block;
+    text-decoration: none;
+    color: inherit;
   }
 
   @keyframes appear {
