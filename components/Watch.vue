@@ -49,12 +49,15 @@ export default {
   },
   mounted() {
     window.addEventListener('resize', this.switchVideoFormat)
-    // When store dispatch
-    this.$bus.$on('resetScroll', e => this.controller.scrollTo(0))
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.switchVideoFormat)
     this.controller && this.controller.destroy(true)
+  },
+  watch: {
+    lang(lang) {
+      this.controller.scrollTo(0)
+    }
   },
   methods: {
     addScene({triggerElement, duration, triggerHook, index}) {
@@ -80,7 +83,7 @@ export default {
       this.loaded = loaded
     }
   },
-  computed: mapState(['video', 'captions', 'currentIndex']),
+  computed: mapState(['video', 'captions', 'currentIndex', 'lang']),
 }
 </script>
 
