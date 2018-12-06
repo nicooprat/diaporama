@@ -32,10 +32,7 @@ export default {
     })
 
     if(this.$store.state.currentIndex === this.$props.index) {
-      this.$emit('scrollTo', {
-        scene: this.scene,
-        index: this.$props.index
-      })
+      this.$emit('scrollToIndex', this.$props.index)
     }
   },
   destroyed() {
@@ -47,8 +44,7 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang="scss" scoped>
   li {
     margin: 1px 0 0 0;
     position: relative;
