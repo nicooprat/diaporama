@@ -47,7 +47,6 @@ module.exports = {
     }
   },
   plugins: [
-    { src: '~plugins/event-bus.js' },
   ]
 }
 
