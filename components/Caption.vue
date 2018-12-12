@@ -47,22 +47,26 @@ export default {
     position: relative;
     padding: 2.5vh .5em;
     animation: appear 250ms var(--delay) both paused;
-  }
 
-  li[data-ready] {
-    animation-play-state: running;
-  }
+    &[data-ready] {
+      animation-play-state: running;
+    }
 
-  li[data-active] {
-    background-color: rgba(0,0,0,.05);
-  }
+    &[data-active] {
+      background-color: rgba(0,0,0,.05);
+    }
 
-  li:not([data-loaded]):after {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background-color: #f8fafd;
-    opacity: .75;
+    &:not([data-loaded]):after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #f8fafd;
+      opacity: .75;
+    }
+
+    &[data-space] {
+      margin-top: 5vh;
+    }
   }
 
   a {

@@ -12,6 +12,7 @@
         :caption="caption"
         :index="index"
         :initialIndex="initialIndex"
+        :data-space="index > 0 && captionHasSpace({current: caption, previous: captions[index-1]})"
         :data-ready="scrolledDown"
         :data-active="index == currentIndex"
         :data-loaded="caption.start < loaded"
@@ -82,7 +83,11 @@ export default {
     },
     setLoaded(loaded) {
       this.loaded = loaded
-    }
+    },
+    captionHasSpace({current, previous}) {
+      // Display space if > 1s between current & previous caption
+      return previous && current.start - (previous.start + previous.dur) > 1
+    },
   },
   computed: mapState(['video', 'captions', 'currentIndex', 'lang']),
 }
