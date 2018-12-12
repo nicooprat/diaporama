@@ -43,6 +43,7 @@ module.exports = {
 
       // Bugsnag
       if (!isDev && isClient) {
+        config.devtool = '#source-map'
         config.plugins.push(
           new BugsnagBuildReporterPlugin({
             apiKey: process.env.BUGSNAG,
@@ -55,10 +56,8 @@ module.exports = {
             apiKey: process.env.BUGSNAG,
             appVersion: process.env.RELEASE,
             releaseStage: 'production',
-            publicPath: './dist'
           })
         )
-        console.log(config.plugins)
       }
     },
     postcss: {
