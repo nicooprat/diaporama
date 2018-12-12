@@ -8,7 +8,7 @@
     "dev": "HOST=0.0.0.0 node --inspect node_modules/.bin/nuxt",
     "build": "nuxt build",
     "start": "nuxt start",
-    "generate": "nuxt generate",
+    "generate": "RELEASE=$(git rev-parse HEAD) nuxt generate",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "precommit": "npm run lint",
     "start:lambda": "netlify-lambda serve src/lambda",
@@ -36,6 +36,7 @@
     "netlify-lambda": "^1.0.3",
     "node-sass": "^4.10.0",
     "postcss-easing-gradients": "^3.0.1",
-    "sass-loader": "^7.1.0"
+    "sass-loader": "^7.1.0",
+    "webpack-bugsnag-plugins": "^1.2.3"
   }
 }

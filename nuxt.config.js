@@ -1,3 +1,6 @@
+const { BugsnagBuildReporterPlugin, BugsnagSourceMapUploaderPlugin } = require('webpack-bugsnag-plugins')
+require('dotenv').config()
+
 module.exports = {
   /*
   ** Headers of the page
@@ -27,10 +30,8 @@ module.exports = {
   ** Build configuration
   */
   build: {
-    /*
-    ** Run ESLint on save
-    */
-    extend (config, { isDev, isClient }) {
+    extend (config, { isDev, isClient, isStatic }) {
+      // Run ESLint on save
       if (isDev && isClient) {
         config.module.rules.push({
           enforce: 'pre',
@@ -38,6 +39,26 @@ module.exports = {
           loader: 'eslint-loader',
           exclude: /(node_modules)/
         })
+      }
+
+      // Bugsnag
+      if (!isDev && isClient) {
+        config.plugins.push(
+          new BugsnagBuildReporterPlugin({
+            apiKey: process.env.BUGSNAG,
+            appVersion: process.env.RELEASE,
+            releaseStage: 'production'
+          })
+        )
+        config.plugins.push(
+          new BugsnagSourceMapUploaderPlugin({
+            apiKey: process.env.BUGSNAG,
+            appVersion: process.env.RELEASE,
+            releaseStage: 'production',
+            publicPath: './dist'
+          })
+        )
+        console.log(config.plugins)
       }
     },
     postcss: {
