@@ -26,6 +26,12 @@
 import getYouTubeID from 'get-youtube-id'
 
 export default {
+  mounted() {
+    // Set preferred navigator language by default, if not set yet
+    if(!this.$store.state.lang) {
+      this.$store.dispatch('setLang', navigator.language.split('-')[0])
+    }
+  },
   methods: {
     submit(e) {
       const form = e.target

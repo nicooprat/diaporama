@@ -47,6 +47,7 @@ module.exports = {
     }
   },
   plugins: [
+    { src: '~/plugins/persistedstate.js', ssr: false }
   ]
 }
 

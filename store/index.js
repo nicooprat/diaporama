@@ -37,7 +37,6 @@ const createStore = () => {
         state.video = null
         state.videoID = null
         state.captions = null
-        state.lang = null
         state.currentIndex = 0
       }
     },
@@ -53,12 +52,14 @@ const createStore = () => {
         video.captions.sort((a,b) => {
           // Sort captions by navigator preferences
           return navigator.languages.includes(a.languageCode) ? -1 : 1
-        }).sort((a,b) => {
+        })
+        video.captions.sort((a,b) => {
           // Sort automatic caption after manual ones
           return a.kind === 'asr' ? 1 : 0
-        }).sort((a,b) => {
+        })
+        video.captions.sort((a,b) => {
           // Sort last one chosen first
-          return a.languageCode === store.state.lang ? 1 : 0
+          return a.languageCode === store.state.lang ? -1 : 1
         })
         store.commit('setVideo', video)
         store.commit('setVideoID', videoID)
@@ -80,6 +81,7 @@ const createStore = () => {
           lang,
         })
         store.commit('setIndex', 0)
+        store.dispatch('updateURL')
         return captions
       },
       setIndex(store, index) {
@@ -98,6 +100,9 @@ const createStore = () => {
       },
       resetState(store) {
         store.commit('resetState')
+      },
+      setLang(store, lang) {
+        store.commit('setLang', lang)
       }
     }
   })
