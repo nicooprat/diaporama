@@ -1,6 +1,6 @@
 <template>
   <main>
-    <Video v-if="video" @loaded="setLoaded"/>
+    <Video v-if="video" @loaded="setLoaded" @scrollToIndex="scrollToIndex"/>
 
     <ul v-if="captions">
       <Caption
@@ -8,6 +8,7 @@
         @addScene="addScene"
         @removeScene="removeScene"
         @scrollToIndex="scrollToIndex"
+        :controller="controller"
         :caption="caption"
         :index="index"
         :initialIndex="initialIndex"
