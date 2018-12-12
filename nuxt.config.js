@@ -30,7 +30,7 @@ module.exports = {
   ** Build configuration
   */
   build: {
-    extend (config, { isDev, isClient, isStatic }) {
+    extend (config, { isDev, isClient }) {
       // Run ESLint on save
       if (isDev && isClient) {
         config.module.rules.push({
@@ -46,14 +46,14 @@ module.exports = {
         config.devtool = '#source-map'
         config.plugins.push(
           new BugsnagBuildReporterPlugin({
-            apiKey: process.env.BUGSNAG,
+            apiKey: 'c1e2241fdaa9785ed9f9288526498ae4',
             appVersion: process.env.RELEASE,
             releaseStage: 'production'
           })
         )
         config.plugins.push(
           new BugsnagSourceMapUploaderPlugin({
-            apiKey: process.env.BUGSNAG,
+            apiKey: 'c1e2241fdaa9785ed9f9288526498ae4',
             appVersion: process.env.RELEASE,
             releaseStage: 'production',
           })
