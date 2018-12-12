@@ -17,7 +17,7 @@ exports.handler = function(event, context, callback) {
       return
     } else {
       const playerResponse = JSON.parse(res.player_response)
-      const captions = playerResponse.captions.playerCaptionsTracklistRenderer.captionTracks
+      const captions = playerResponse.captions.playerCaptionsTracklistRenderer.captionTracks.filter(c => c.kind !== 'asr')
       const streams = playerResponse.streamingData.formats
       const details = playerResponse.videoDetails
 
