@@ -1,11 +1,12 @@
 import Vuex from 'vuex'
+import axios from 'axios';
 import cachios from 'cachios';
 
-const axios = cachios.create(cachios, {
+const axiosInstance = cachios.create(axios.create({
+  baseURL: process.env.NODE_ENV === 'development' ? 'http://localhost:9000' : '/.netlify/functions'
+}), {
   ttl: 3600
 })
-
-const prefix = process.env.NODE_ENV === 'development' ? 'http://localhost:9000' : '/.netlify/functions'
 
 const createStore = () => {
   return new Vuex.Store({
@@ -48,7 +49,7 @@ const createStore = () => {
         store.commit('setLang',  context.route.query.l || null)
       },
       async getVideo(store, videoID) {
-        const {data: video} = await axios.get(`${prefix}/video?v=${videoID}`)
+        const {data: video} = await axiosInstance.get(`video?v=${videoID}`)
         video.captions.sort((a,b) => {
           // Sort captions by navigator preferences
           return navigator.languages.includes(a.languageCode) ? -1 : 1
@@ -66,7 +67,7 @@ const createStore = () => {
         return video
       },
       async getCaptions(store, {videoID, lang}) {
-        const {data: captions} = await axios.get(`${prefix}/captions?v=${videoID}&l=${lang}`)
+        const {data: captions} = await axiosInstance.get(`captions?v=${videoID}&l=${lang}`)
         store.commit('setCaptions', captions.map(caption => ({
           start: parseFloat(caption.start),
           dur: parseFloat(caption.dur),
