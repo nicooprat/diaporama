@@ -55,6 +55,12 @@ export default {
 
     > * {
       animation: appear 350ms both;
+
+      @for $i from 1 through 10 {
+        &:nth-child(#{$i}) {
+          animation-delay: ($i - 1) * 100ms;
+        }
+      }
     }
   }
 
@@ -68,13 +74,11 @@ export default {
     font-size: 4em;
     margin-top: 0;
     margin-bottom: 0;
-    animation-delay: 100ms;
   }
 
   h2 {
     font-weight: normal;
     color: rgba(black,.5);
-    animation-delay: 200ms;
   }
 
   form {
@@ -87,7 +91,6 @@ export default {
     border-radius: 3px;
     margin-top: 1em;
     background: white;
-    animation-delay: 300ms;
 
     &:focus-within {
       border-color: #f9183d;
@@ -121,6 +124,22 @@ export default {
     svg {
       width: 1em;
       height: 1em;
+    }
+  }
+
+  footer {
+    margin-top: 2em;
+
+    a {
+      text-decoration: none;
+      border-bottom: 1px solid;
+      color: inherit;
+      opacity: .5;
+
+      &:hover,
+      &:focus {
+        opacity: 1;
+      }
     }
   }
 </style>

@@ -27,6 +27,12 @@
 
     > * {
       animation: appear 350ms both;
+
+      @for $i from 1 through 10 {
+        &:nth-child(#{$i}) {
+          animation-delay: ($i - 1) * 100ms;
+        }
+      }
     }
 
     &:before {

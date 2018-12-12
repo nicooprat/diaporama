@@ -190,8 +190,8 @@ export default {
       position: absolute;
       top: 0; bottom: 0; left: 0;
       width: 20%;
-      background: linear-gradient(to right, rgba(white,0), ease-in-out, rgba(white,.5));
-      opacity: .5;
+      background: linear-gradient(to right, rgba(black,0), ease-in-out, rgba(black,1));
+      opacity: .05;
       animation: loading 2s infinite both linear;
 
       @keyframes loading {
