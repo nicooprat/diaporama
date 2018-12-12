@@ -105,6 +105,11 @@ export default {
     @media (min-width: 1200px) {
       font-size: 2em;
     }
+
+    @media (min-width: 90rem) {
+      display: flex;
+      max-width: none;
+    }
   }
 
   ul {
@@ -114,6 +119,12 @@ export default {
 
     @media (min-width: 520px) {
       margin-top: 20vh;
+    }
+
+    @media (min-width: 90rem) {
+      width: calc(50% - 10vh);
+      flex: 0 0 auto;
+      margin: 60vh 0;
     }
   }
 </style>

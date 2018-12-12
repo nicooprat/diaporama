@@ -4,20 +4,22 @@
     :style="{'--ratio': stream.height / stream.width}"
     @mousemove="scrub"
     @mouseleave="endScrub">
-    <video
-      :src="stream.url"
-      :width="stream.width"
-      :height="stream.height" muted playsinline autoplay v-on:loadeddata="init"
-      :data-loaded="loaded > 0"
-      @progress="progress">
-    </video>
-    <div class="loading" v-if="currentTime > loaded"></div>
-    <div v-if="loaded" class="loaded" :style="{transform: 'scaleX('+ loaded / duration +')'}"></div>
-    <div v-if="loaded" class="progress" :style="{transform: 'scaleX('+ currentTime / duration +')'}"></div>
-    <div v-if="loaded" class="currentTime">{{formatTime(currentTime)}}</div>
-    <div v-if="loaded" class="duration">{{formatTime(duration)}}</div>
-    <div v-if="loaded && currentScrub > 0" class="scrub" :style="{left: currentScrub / duration * 100 + '%'}"></div>
-    <input v-if="loaded" type="range" class="handle" min="0" max="100" step="0.1" @input="drag" :value="currentTime ? currentTime / duration * 100 : 0">
+    <div class="inner">
+      <video
+        :src="stream.url"
+        :width="stream.width"
+        :height="stream.height" muted playsinline autoplay v-on:loadeddata="init"
+        :data-loaded="loaded > 0"
+        @progress="progress">
+      </video>
+      <div class="loading" v-if="currentTime > loaded"></div>
+      <div v-if="loaded" class="loaded" :style="{transform: 'scaleX('+ loaded / duration +')'}"></div>
+      <div v-if="loaded" class="progress" :style="{transform: 'scaleX('+ currentTime / duration +')'}"></div>
+      <div v-if="loaded" class="currentTime">{{formatTime(currentTime)}}</div>
+      <div v-if="loaded" class="duration">{{formatTime(duration)}}</div>
+      <div v-if="loaded && currentScrub > 0" class="scrub" :style="{left: currentScrub / duration * 100 + '%'}"></div>
+      <input v-if="loaded" type="range" class="handle" min="0" max="100" step="0.1" @input="drag" :value="currentTime ? currentTime / duration * 100 : 0">
+    </div>
   </section>
 </template>
 
@@ -122,33 +124,49 @@ export default {
 <style lang="scss" scoped>
   .video {
     position: sticky;
-    padding-bottom: calc(var(--ratio) * 100%);
     top: 0; left: 0; right: 0;
     z-index: 1;
+
+    @media (min-width: 90rem) {
+      width: calc(50% - 10vh);
+      flex: 0 0 auto;
+      padding: 0 5vh;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background-color: transparent;
+    }
+  }
+
+  .inner {
     background-color: #f8fafd;
+    position: relative;
+    padding-bottom: calc(var(--ratio) * 100%);
 
     @media (min-width: 45rem) {
       border-top: 5vh solid #f8fafd;
     }
 
-    &:before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background-color: rgba(black,.05);
+    @media (min-width: 90rem) {
+      padding-bottom: 0;
     }
 
-    &:after {
-      content: '';
-      width: 100vw;
-      left: 50%;
-      margin-left: -50vw;
-      top: 100%;
-      height: 10vh;
-      pointer-events: none;
-      border-top: 10vh solid #f8fafd;
-      position: absolute;
-      background-image: linear-gradient(to bottom, #f8fafd, rgba(#f8fafd,0));
+    @media (max-width: 89.9rem) {
+
+      &:after {
+        content: '';
+        width: 100vw;
+        left: 50%;
+        margin-left: -50vw;
+        top: 100%;
+        height: 10vh;
+        pointer-events: none;
+        border-top: 10vh solid #f8fafd;
+        position: absolute;
+        background-image: linear-gradient(to bottom, #f8fafd, rgba(#f8fafd,0));
+      }
     }
   }
 
@@ -172,13 +190,18 @@ export default {
     &[data-loaded] {
       opacity: 1;
     }
+
+    @media (min-width: 90rem) {
+      position: static;
+      height: auto;
+    }
   }
 
   .loading {
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
-    background-color: rgba(white,.5);
-    animation: fadeIn 200ms 500ms both;
+    background-color: rgba(black,.05);
+    animation: fadeIn 200ms both;
     overflow: hidden;
 
     @keyframes fadeIn {
