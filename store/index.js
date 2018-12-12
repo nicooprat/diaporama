@@ -50,21 +50,27 @@ const createStore = () => {
       },
       async getVideo(store, videoID) {
         const {data: video} = await axios.get(`${prefix}/video?v=${videoID}`)
+        video.captions.sort((a,b) => {
+          // Sort captions by navigator preferences
+          return navigator.languages.includes(a.languageCode) ? -1 : 1
+        }).sort((a,b) => {
+          // Sort automatic caption after manual ones
+          return a.kind === 'asr' ? 1 : 0
+        }).sort((a,b) => {
+          // Sort last one chosen first
+          return a.languageCode === store.state.lang ? 1 : 0
+        })
         store.commit('setVideo', video)
         store.commit('setVideoID', videoID)
         return video
       },
       async getCaptions(store, {videoID, lang}) {
         const {data: captions} = await axios.get(`${prefix}/captions?v=${videoID}&l=${lang}`)
-
-        store.commit('setCaptions', captions.map(caption => {
-          // Sanitize floats
-          return {
-            start: parseFloat(caption.start),
-            dur: parseFloat(caption.dur),
-            text: caption.text,
-          }
-        }))
+        store.commit('setCaptions', captions.map(caption => ({
+          start: parseFloat(caption.start),
+          dur: parseFloat(caption.dur),
+          text: caption.text,
+        })))
         store.commit('setLang', lang)
         return captions
       },
