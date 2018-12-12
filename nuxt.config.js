@@ -56,6 +56,7 @@ module.exports = {
             apiKey: 'c1e2241fdaa9785ed9f9288526498ae4',
             appVersion: process.env.RELEASE,
             releaseStage: 'production',
+            overwrite: true,
           })
         )
       }
