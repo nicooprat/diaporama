@@ -47,7 +47,11 @@ module.exports = {
     }
   },
   plugins: [
+    { src: '~/plugins/bugsnag.js', ssr: false },
     { src: '~/plugins/persistedstate.js', ssr: false }
+  ],
+  modules: [
+    '@nuxtjs/dotenv',
   ]
 }
 

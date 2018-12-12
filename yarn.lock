@@ -590,6 +590,32 @@
     lodash "^4.17.10"
     to-fast-properties "^2.0.0"
 
+"@bugsnag/browser@^5.0.2":
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/@bugsnag/browser/-/browser-5.0.2.tgz#6fcabdd622da82a586428f4b599c9a3fbc664167"
+
+"@bugsnag/js@^5.0.2":
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/@bugsnag/js/-/js-5.0.2.tgz#5bfffca3ed87a27e4ba898a9f46c4e377c3d65e1"
+  dependencies:
+    "@bugsnag/browser" "^5.0.2"
+    "@bugsnag/node" "^5.0.2"
+
+"@bugsnag/node@^5.0.2":
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/@bugsnag/node/-/node-5.0.2.tgz#7d762f4c5d416cdfe01df86eff8d7cc53401d0e5"
+  dependencies:
+    byline "^5.0.0"
+    error-stack-parser "^2.0.2"
+    iserror "^0.0.2"
+    pump "^3.0.0"
+    request "^2.87.0"
+    stack-generator "^2.0.3"
+
+"@bugsnag/plugin-vue@^5.0.2":
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/@bugsnag/plugin-vue/-/plugin-vue-5.0.2.tgz#a768c7f4d818ecfeeb06b8980c831539eb98b055"
+
 "@csstools/convert-colors@^1.4.0":
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/@csstools/convert-colors/-/convert-colors-1.4.0.tgz#ad495dc41b12e75d588c6db8b9834f08fa131eb7"
@@ -788,6 +814,12 @@
   resolved "https://registry.yarnpkg.com/@nuxtjs/devalue/-/devalue-1.1.0.tgz#4dcdf33d914f6ea71b09da365452dd1016390d64"
   dependencies:
     consola "^2.0.7"
+
+"@nuxtjs/dotenv@^1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@nuxtjs/dotenv/-/dotenv-1.3.0.tgz#fcfd8fa9da767ce1a79c11104ab998d610e23731"
+  dependencies:
+    dotenv "^6.0.0"
 
 "@nuxtjs/opencollective@^0.1.0":
   version "0.1.0"
@@ -1449,6 +1481,10 @@ builtin-modules@^1.0.0:
 builtin-status-codes@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/builtin-status-codes/-/builtin-status-codes-3.0.0.tgz#85982878e21b98e1c66425e03d0174788f569ee8"
+
+byline@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/byline/-/byline-5.0.0.tgz#741c5216468eadc457b03410118ad77de8c1ddb1"
 
 bytes@3.0.0:
   version "3.0.0"
@@ -2376,6 +2412,10 @@ dot-prop@^4.1.1:
   dependencies:
     is-obj "^1.0.0"
 
+dotenv@^6.0.0:
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-6.2.0.tgz#941c0410535d942c8becf28d3f357dbd9d476064"
+
 duplexer@^0.1.1:
   version "0.1.1"
   resolved "http://registry.npmjs.org/duplexer/-/duplexer-0.1.1.tgz#ace6ff808c1ce66b57d1ebf97977acb02334cfc1"
@@ -2471,7 +2511,7 @@ error-ex@^1.2.0, error-ex@^1.3.1:
   dependencies:
     is-arrayish "^0.2.1"
 
-error-stack-parser@^2.0.0:
+error-stack-parser@^2.0.0, error-stack-parser@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/error-stack-parser/-/error-stack-parser-2.0.2.tgz#4ae8dbaa2bf90a8b450707b9149dcabca135520d"
   dependencies:
@@ -3620,6 +3660,10 @@ isarray@0.0.1:
 isarray@1.0.0, isarray@^1.0.0, isarray@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/isarray/-/isarray-1.0.0.tgz#bb935d48582cba168c06834957a54a3e07124f11"
+
+iserror@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/iserror/-/iserror-0.0.2.tgz#bd53451fe2f668b9f2402c1966787aaa2c7c0bf5"
 
 isexe@^2.0.0:
   version "2.0.0"
@@ -6064,6 +6108,12 @@ ssri@^6.0.0:
 stable@~0.1.6:
   version "0.1.8"
   resolved "https://registry.yarnpkg.com/stable/-/stable-0.1.8.tgz#836eb3c8382fe2936feaf544631017ce7d47a3cf"
+
+stack-generator@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/stack-generator/-/stack-generator-2.0.3.tgz#bb74385c67ffc4ccf3c4dee5831832d4e509c8a0"
+  dependencies:
+    stackframe "^1.0.4"
 
 stack-trace@0.0.10:
   version "0.0.10"
