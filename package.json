@@ -8,7 +8,7 @@
     "dev": "HOST=0.0.0.0 node --inspect node_modules/.bin/nuxt",
     "build": "nuxt build",
     "start": "nuxt start",
-    "generate": "RELEASE=$(git rev-parse HEAD) nuxt generate",
+    "generate": "RELEASE=$(git rev-parse HEAD) nuxt generate && rm dist/**/*.map",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "precommit": "npm run lint",
     "start:lambda": "netlify-lambda serve src/lambda",
