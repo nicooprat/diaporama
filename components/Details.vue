@@ -52,7 +52,6 @@ export default {
     margin-left: auto;
     margin-right: auto;
     display: flex;
-    align-items: center;
     position: fixed;
     justify-content: space-between;
     bottom: 0;
@@ -121,7 +120,7 @@ export default {
   label {
     flex: 0 1 auto;
     display: flex;
-    align-items: baseline;
+    align-items: center;
     padding: 1em;
     cursor: pointer;
     position: relative;
@@ -150,5 +149,6 @@ export default {
     opacity: 0;
     top: 0; left: 0;
     width: 100%; height: 100%;
+    cursor: pointer;
   }
 </style>
