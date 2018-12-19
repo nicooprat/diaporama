@@ -3,7 +3,7 @@
     <img src="~assets/logo.svg" alt="logo">
 
     <h1>
-      zootrope
+      Diaporama
     </h1>
     <h2>
       Turn Youtube videos into <br> scrollable caption-based slideshows
@@ -17,7 +17,7 @@
     </form>
 
     <footer>
-      <a href="https://github.com/nicooprat/zootrope">Fork, credits & readme</a>
+      <a href="https://github.com/nicooprat/diaporama">Fork, credits & readme</a>
     </footer>
   </main>
 </template>

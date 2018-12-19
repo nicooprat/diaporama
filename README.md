@@ -1,4 +1,4 @@
-# zootrope
+# Diaporama
 
 > Turn Youtube videos into scrollable caption-based slideshows
 
