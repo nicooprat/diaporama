@@ -9,8 +9,8 @@
     </a>
     <label for="switchLang" v-if="video.captions">
       <strong>{{lang}}</strong>
-      <svg width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M0 7.33l2.829-2.83 9.175 9.339 9.167-9.339 2.829 2.83-11.996 12.17z"/></svg>
-      <select v-on:change="switchLang" id="switchLang">
+      <svg v-if="video.captions.length > 1" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M0 7.33l2.829-2.83 9.175 9.339 9.167-9.339 2.829 2.83-11.996 12.17z"/></svg>
+      <select v-if="video.captions.length > 1" v-on:change="switchLang" id="switchLang">
         <option v-for="caption in video.captions" v-bind:key="caption.vssId" :value="caption.languageCode" :selected="lang === caption.languageCode">
           {{caption.name.simpleText.replace(/\+/g, ' ')}}
         </option>
