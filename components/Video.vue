@@ -338,6 +338,7 @@ export default {
 
   .thumb::-webkit-slider-runnable-track { @include track(); }
   .thumb::-moz-range-track { @include track(); }
+  .thumb::-ms-track { @include track(); }
 
   @mixin thumb {
     appearance: none;
@@ -353,4 +354,5 @@ export default {
 
   .thumb::-webkit-slider-thumb { @include thumb(); }
   .thumb::-moz-range-thumb { @include thumb(); }
+  .thumb::-ms-thumb { @include thumb(); }
 </style>
