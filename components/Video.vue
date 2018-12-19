@@ -1,10 +1,11 @@
 <template>
   <section
     class="video"
-    :style="{'--ratio': stream.height / stream.width}"
-    @mousemove="scrub"
-    @mouseleave="endScrub">
-    <div class="inner">
+    :style="{'--ratio': stream.height / stream.width}">
+    <div
+      class="inner"
+      @mousemove="scrub"
+      @mouseleave="endScrub">
       <video
         :src="stream.url"
         :width="stream.width"
@@ -61,7 +62,9 @@ export default {
   },
   methods: {
     scrub(e) {
-      const percent = (e.pageX - e.target.getBoundingClientRect().left) / e.target.clientWidth
+      const coeff = (e.pageX - e.target.getBoundingClientRect().left) / e.target.clientWidth
+      const percent = Math.max(0, Math.min(1, coeff))
+      if(isNaN(percent)) return
       const time = this.duration * percent
       this.currentScrub = time
     },
