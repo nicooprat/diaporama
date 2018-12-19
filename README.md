@@ -1,3 +1,5 @@
+<img src="./assets/logo.svg" alt="Diaporama" width="200"/>
+
 # Diaporama
 
 > Turn Youtube videos into scrollable caption-based slideshows
