@@ -5,7 +5,10 @@
     <div
       class="inner"
       @mousemove="scrub"
-      @mouseleave="endScrub">
+      @mouseleave="endScrub"
+      @touchstart="touch"
+      @touchmove="touch"
+      @touchend="touch">
       <video
         :src="stream.url"
         :width="stream.width"
@@ -14,12 +17,13 @@
         @progress="progress">
       </video>
       <div class="loading" v-if="currentTime > loaded"></div>
-      <div v-if="loaded" class="loaded" :style="{transform: 'scaleX('+ loaded / duration +')'}"></div>
-      <div v-if="loaded" class="progress" :style="{transform: 'scaleX('+ currentTime / duration +')'}"></div>
-      <div v-if="loaded" class="currentTime">{{formatTime(currentTime)}}</div>
+      <div v-if="loaded" class="loaded" :style="{width: loaded / duration * 100 +'%'}"></div>
+      <div v-if="loaded" class="progress" :style="{width: currentTime / duration * 100 +'%'}"></div>
+      <div v-if="loaded" class="currentTime">{{formatTime(Math.min(duration, currentTime))}}</div>
       <div v-if="loaded" class="duration">{{formatTime(duration)}}</div>
       <div v-if="loaded && currentScrub > 0" class="scrub" :style="{left: currentScrub / duration * 100 + '%'}"></div>
-      <input v-if="loaded" type="range" class="handle" min="0" max="100" step="0.1" @input="drag" :value="currentTime ? currentTime / duration * 100 : 0">
+      <input v-if="loaded" type="range" class="thumb" min="0" max="100" step="0.1" :value="currentTime ? currentTime / duration * 100 : 0">
+      <input v-if="loaded" type="range" class="handle" min="0" max="100" step="0.1" @input="handle" :value="currentTime ? currentTime / duration * 100 : 0">
     </div>
   </section>
 </template>
@@ -61,10 +65,13 @@ export default {
     }
   },
   methods: {
+    touch(e) {
+      e.preventDefault() // Prevent scroll
+      e.type === 'touchend' ? this.endScrub() : this.scrub(e)
+      this.drag(e)
+    },
     scrub(e) {
-      const coeff = (e.pageX - e.target.getBoundingClientRect().left) / e.target.clientWidth
-      const percent = Math.max(0, Math.min(1, coeff))
-      if(isNaN(percent)) return
+      const percent = this.getPercentX(e)
       const time = this.duration * percent
       this.currentScrub = time
     },
@@ -73,8 +80,18 @@ export default {
       this.seekToTime(this.currentTime)
     },
     drag(e) {
-      const percent = e.target.value
-      const newTime = this.duration * percent/100
+      const percent = this.getPercentX(e)
+      this.setNewIndexFromTime(this.duration * percent)
+    },
+    handle(e) {
+      const percent = e.currentTarget.value
+      this.setNewIndexFromTime(this.duration * percent/100)
+    },
+    getPercentX(e) {
+      const coeff = (e.pageX - e.currentTarget.getBoundingClientRect().left) / e.currentTarget.clientWidth
+      return Math.max(0, Math.min(1, coeff))
+    },
+    setNewIndexFromTime(newTime) {
       const newIndex = this.captions.reduce((previous, caption, index) => {
         return caption.start < newTime ? index : previous
       }, 0)
@@ -101,11 +118,11 @@ export default {
       video.currentTime = time
     },
     init(e) {
-      e.target.pause() // Autoplay then pause immediately, fix iOS bug
-      this.$data.duration = parseInt(e.target.duration)
+      e.currentTarget.pause() // Autoplay then pause immediately, fix iOS bug
+      this.$data.duration = parseInt(e.currentTarget.duration)
     },
     progress(e) {
-      const buffered = e.target.buffered
+      const buffered = e.currentTarget.buffered
       const loaded = buffered.end(buffered.length-1)
       this.$data.loaded = loaded
       this.$emit('loaded', loaded)
@@ -147,6 +164,7 @@ export default {
     background-color: #f8fafd;
     position: relative;
     padding-bottom: calc(var(--ratio) * 100%);
+    cursor: col-resize;
 
     @media (min-width: 45rem) {
       border-top: 5vh solid #f8fafd;
@@ -232,14 +250,13 @@ export default {
   }
 
   .progress,
-  .loaded {
+  .loaded,
+  .thumb {
     height: 1vh;
     position: absolute;
     z-index: 2;
-    width: 99.9%; // Fix iOS bug
     left: 0; bottom: 0;
-    transform: scaleX(0);
-    transform-origin: left;
+    max-width: 100%;
   }
 
   .progress {
@@ -282,34 +299,58 @@ export default {
     border-left: 1px solid rgba(white,.5);
   }
 
+  // Invisible, but draggable
   .handle {
     appearance: none;
     width: 100%;
     height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    user-select: none;
+    touch-action: none;
+    -webkit-tap-highlight-color: transparent;
+    cursor: col-resize;
+  }
+
+  // Visible, but not draggable
+  .thumb {
+    appearance: none;
+    width: 100%;
+    height: 1vh;
     position: absolute;
     bottom: 0; left: 0;
     z-index: 3;
     background: none;
     outline: none;
     cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
+    pointer-events: none;
   }
 
-  .handle::-webkit-slider-runnable-track {
+  @mixin track {
     display: flex;
     height: 100%;
     background: transparent;
     appearance: none;
+    position: relative;
   }
 
-  .handle::-webkit-slider-thumb {
+  .thumb::-webkit-slider-runnable-track { @include track(); }
+  .thumb::-moz-range-track { @include track(); }
+
+  @mixin thumb {
     appearance: none;
     width: 2vh;
     height: 2vh;
-    margin-top: auto;
+    position: absolute;
+    bottom: 0;
     margin-bottom: -.5vh;
     border-radius: 100%;
     background: #f9183d;
     border: none;
   }
+
+  .thumb::-webkit-slider-thumb { @include thumb(); }
+  .thumb::-moz-range-thumb { @include thumb(); }
 </style>
