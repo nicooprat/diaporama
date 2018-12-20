@@ -77,8 +77,9 @@ export default {
       delete this.scenes[index]
     },
     scrollToIndex(index) {
-      this.controller.scrollTo(this.scenes[index])
-      this.$store.dispatch('setIndex', index)
+      const newIndex = Math.max(0, Math.min(this.captions.length - 1, index))
+      this.controller.scrollTo(this.scenes[newIndex])
+      this.$store.dispatch('setIndex', newIndex)
       this.scrolledDown = true
     },
     setLoaded(loaded) {
@@ -93,14 +94,12 @@ export default {
     ...mapState(['video', 'captions', 'currentIndex', 'lang']),
     keymap() {
       return {
-        up: (e) => {
+        up: e => {
           e.preventDefault()
-          if(this.currentIndex <= 0) return
           this.scrollToIndex(this.currentIndex - 1)
         },
-        down: (e) => {
+        down: e => {
           e.preventDefault()
-          if(this.currentIndex >= this.captions.length - 1) return
           this.scrollToIndex(this.currentIndex + 1)
         },
       }
