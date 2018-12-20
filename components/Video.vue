@@ -95,7 +95,6 @@ export default {
       const newIndex = this.captions.reduce((previous, caption, index) => {
         return caption.start < newTime ? index : previous
       }, 0)
-      this.$store.dispatch('setIndex', newIndex)
       this.$emit('scrollToIndex', newIndex)
     },
     switchVideoFormat(e) {
