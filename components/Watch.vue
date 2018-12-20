@@ -1,5 +1,5 @@
 <template>
-  <main>
+  <main v-hotkey="keymap">
     <Video v-if="video" @loaded="setLoaded" @scrollToIndex="scrollToIndex"/>
 
     <ul v-if="captions">
@@ -89,7 +89,27 @@ export default {
       return previous && current.start - (previous.start + previous.dur) > 1
     },
   },
-  computed: mapState(['video', 'captions', 'currentIndex', 'lang']),
+  computed: {
+    ...mapState(['video', 'captions', 'currentIndex', 'lang']),
+    keymap() {
+      return {
+        up: (e) => {
+          e.preventDefault()
+          if(this.currentIndex <= 0) return
+          const newIndex = this.currentIndex - 1
+          this.$store.dispatch('setIndex', newIndex)
+          this.scrollToIndex(newIndex)
+        },
+        down: (e) => {
+          e.preventDefault()
+          if(this.currentIndex >= this.captions.length - 1) return
+          const newIndex = this.currentIndex + 1
+          this.$store.dispatch('setIndex', newIndex)
+          this.scrollToIndex(newIndex)
+        },
+      }
+    }
+  },
 }
 </script>
 

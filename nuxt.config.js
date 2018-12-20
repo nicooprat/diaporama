@@ -69,7 +69,8 @@ module.exports = {
   },
   plugins: [
     { src: '~/plugins/bugsnag.js', ssr: false },
-    { src: '~/plugins/persistedstate.js', ssr: false }
+    { src: '~/plugins/persistedstate.js', ssr: false },
+    { src: '~/plugins/hotkey.js' },
   ],
   modules: [
     '@nuxtjs/dotenv',
