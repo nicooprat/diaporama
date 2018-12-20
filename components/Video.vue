@@ -110,6 +110,7 @@ export default {
       if(!this.$el) return
       if(!this.captions) return
       const currentCaption = this.captions[index]
+      if(!currentCaption) return
       const time = currentCaption.start + currentCaption.dur / 2
       this.currentTime = time
     },

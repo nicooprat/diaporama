@@ -1,5 +1,5 @@
 <template>
-  <li class="caption" :style="{'--delay': Math.min(500,Math.max(0,(index-initialIndex)))*50+'ms'}">
+  <li class="caption" :style="{'--delay': Math.min(500, Math.max(0, (index-initialIndex)*50)) + 'ms'}">
     <a :href="`#${index}`" @click.prevent.stop="activate">
       {{caption.text}}
     </a>

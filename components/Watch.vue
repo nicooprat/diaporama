@@ -8,7 +8,6 @@
         @addScene="addScene"
         @removeScene="removeScene"
         @scrollToIndex="scrollToIndex"
-        :controller="controller"
         :caption="caption"
         :index="index"
         :initialIndex="initialIndex"
@@ -136,6 +135,7 @@ export default {
     list-style-type: none;
     padding: 0 5vh;
     margin: 25vh auto;
+    overflow: hidden;
 
     @media (min-width: 520px) {
       margin-top: 20vh;
@@ -144,7 +144,7 @@ export default {
     @media (min-width: 90rem) {
       width: calc(50% - 10vh);
       flex: 0 0 auto;
-      margin: 60vh 0;
+      margin: 51vh 0;
     }
   }
 </style>
