@@ -20,7 +20,7 @@ export default {
 
     this.$emit('addScene', {
       triggerElement: this.$el,
-      duration: this.$el.clientHeight,
+      duration: this.$el.clientHeight - 1,
       triggerHook: offset,
       index: this.index,
     })
@@ -35,7 +35,6 @@ export default {
   methods: {
     activate() {
       this.$emit('scrollToIndex', this.index)
-      this.$store.dispatch('setIndex', this.index)
     }
   }
 }
@@ -45,7 +44,6 @@ export default {
   li {
     margin: 1px 0 0 0;
     position: relative;
-    padding: 2.5vh .5em;
     animation: appear 250ms var(--delay) both paused;
 
     &[data-ready] {
@@ -73,6 +71,7 @@ export default {
     display: block;
     text-decoration: none;
     color: inherit;
+    padding: 2.5vh .5em;
   }
 
   @keyframes appear {

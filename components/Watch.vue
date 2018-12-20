@@ -26,7 +26,7 @@ import Video from './Video'
 import Caption from './Caption'
 
 if(process.browser) {
-  var ScrollMagic = require('scrollmagic/scrollmagic/uncompressed/ScrollMagic')
+  var ScrollMagic = require('ScrollMagic')
 }
 
 export default {
@@ -78,6 +78,7 @@ export default {
     },
     scrollToIndex(index) {
       this.controller.scrollTo(this.scenes[index])
+      this.$store.dispatch('setIndex', index)
       this.scrolledDown = true
     },
     setLoaded(loaded) {
@@ -95,16 +96,12 @@ export default {
         up: (e) => {
           e.preventDefault()
           if(this.currentIndex <= 0) return
-          const newIndex = this.currentIndex - 1
-          this.$store.dispatch('setIndex', newIndex)
-          this.scrollToIndex(newIndex)
+          this.scrollToIndex(this.currentIndex - 1)
         },
         down: (e) => {
           e.preventDefault()
           if(this.currentIndex >= this.captions.length - 1) return
-          const newIndex = this.currentIndex + 1
-          this.$store.dispatch('setIndex', newIndex)
-          this.scrollToIndex(newIndex)
+          this.scrollToIndex(this.currentIndex + 1)
         },
       }
     }
