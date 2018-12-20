@@ -20,7 +20,7 @@ export default {
 
     this.$emit('addScene', {
       triggerElement: this.$el,
-      duration: this.$el.clientHeight - 1,
+      duration: () => this.$el.clientHeight - 1,
       triggerHook: offset,
       index: this.index,
     })
