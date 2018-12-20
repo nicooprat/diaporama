@@ -21,12 +21,13 @@ exports.handler = function(event, context, callback) {
       const streams = playerResponse.streamingData.formats
       const details = playerResponse.videoDetails
 
+      const headers = process.env.npm_lifecycle_event === 'start:lambda' ? {
+        'Access-Control-Allow-Origin': '*'
+      } : {}
+
       callback(null, {
         statusCode: 200,
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
-        },
+        headers,
         body: JSON.stringify({
           captions,
           streams,
