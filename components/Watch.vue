@@ -27,7 +27,7 @@ import Caption from './Caption'
 
 var ScrollMagic
 if(process.browser) {
-  ScrollMagic = require('ScrollMagic')
+  ScrollMagic = require('scrollmagic')
 }
 
 export default {
