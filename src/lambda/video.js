@@ -18,7 +18,7 @@ exports.handler = function(event, context, callback) {
     } else {
       const playerResponse = JSON.parse(res.player_response)
       const captions = playerResponse.captions.playerCaptionsTracklistRenderer.captionTracks.filter(c => c.kind !== 'asr')
-      const streams = playerResponse.streamingData.formats
+      const streams = res.url_encoded_fmt_stream_map
       const details = playerResponse.videoDetails
 
       const headers = process.env.npm_lifecycle_event === 'start:lambda' ? {
@@ -35,6 +35,7 @@ exports.handler = function(event, context, callback) {
             title: details.title,
             author: details.author,
             videoId: details.videoId,
+            ratio: details.thumbnail.thumbnails[0].height / details.thumbnail.thumbnails[0].width
           }
         })
       })

@@ -1,7 +1,7 @@
 <template>
   <section
     class="video"
-    :style="{'--ratio': stream.height / stream.width}">
+    :style="{'--ratio': this.video.details.ratio}">
     <div
       class="inner"
       @mousemove="scrub"
