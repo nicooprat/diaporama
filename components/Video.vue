@@ -1,7 +1,7 @@
 <template>
   <section
     class="video"
-    :style="{'--ratio': this.video.details.ratio}">
+    :style="{'--ratio': video.details.ratio}">
     <div
       class="inner"
       @mousemove="scrub"
@@ -10,6 +10,7 @@
       @touchmove="touch"
       @touchend="touch">
       <video
+        ref="video"
         :src="stream.url"
         :width="stream.width"
         :height="stream.height" muted playsinline autoplay v-on:loadeddata="init"
@@ -98,7 +99,7 @@ export default {
       this.$emit('scrollToIndex', newIndex)
     },
     switchVideoFormat(e) {
-      this.$data.itag = window.innerWidth > 520 ? '22' : '18'
+      this.itag = window.innerWidth > 520 ? '22' : '18'
     },
     formatTime(s) {
       const minutes = Math.floor(s/60)
@@ -114,28 +115,24 @@ export default {
       this.currentTime = time
     },
     seekToTime(time) {
-      const video = this.$el.querySelector('video')
-      video.currentTime = time
+      this.$refs.video.currentTime = time
     },
     init(e) {
       e.currentTarget.pause() // Autoplay then pause immediately, fix iOS bug
-      this.$data.duration = parseInt(e.currentTarget.duration)
+      this.duration = parseInt(e.currentTarget.duration)
     },
     progress(e) {
-      const buffered = e.currentTarget.buffered
+      const {buffered} = e.currentTarget
       const loaded = buffered.end(buffered.length-1)
-      this.$data.loaded = loaded
+      this.loaded = loaded
       this.$emit('loaded', loaded)
     },
   },
   computed: {
     ...mapState(['video', 'captions', 'currentIndex']),
-    percentSeek() {
-      return this.seekToIndex() / this.duration * 100
-    },
     stream() {
-      const stream = this.video.streams.filter(i => i.itag == this.$data.itag)
-      return stream && stream[0]
+      const stream = this.video.streams.find(i => i.itag == this.itag)
+      return stream
     }
   }
 }
