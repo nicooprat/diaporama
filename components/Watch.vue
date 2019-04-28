@@ -25,8 +25,9 @@ import { mapState } from 'vuex'
 import Video from './Video'
 import Caption from './Caption'
 
+var ScrollMagic
 if(process.browser) {
-  var ScrollMagic = require('ScrollMagic')
+  ScrollMagic = require('ScrollMagic')
 }
 
 export default {
